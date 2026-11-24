@@ -1,0 +1,1274 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#13b5a0">
+<title>ヌキヌキ処置室</title>
+<meta name="description" content="角栓・ひげ・ニキビ・粉瘤を抜いて、拭いて、ケアして、60秒の動画を投稿。キレイに仕上げるほどバズる、ちょっと気持ちいい処置ゲーム。">
+<meta property="og:title" content="ヌキヌキ処置室">
+<meta property="og:description" content="抜いて、拭いて、ケアして投稿。キレイに仕上げるほどバズる60秒の処置ゲーム。">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%2313b5a0'/%3E%3Ccircle cx='32' cy='34' r='14' fill='%23f6c8ad'/%3E%3Ccircle cx='32' cy='34' r='5' fill='%2322160f'/%3E%3C/svg%3E">
+<link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%2313b5a0'/%3E%3Ccircle cx='32' cy='34' r='14' fill='%23f6c8ad'/%3E%3Ccircle cx='32' cy='34' r='5' fill='%2322160f'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@500;800&display=swap">
+<style>
+/* VOICE: じっくり味わう処置。時間に追われない、気持ちよさ優先
+   IDEA: ミントの処置トレー。肌のマクロ写真みたいな窓と、器具が並ぶトレー
+   PICTURE: 高さマップから陰影をつけた肌（皮溝・毛穴・テカり）。押すと白く盛り上がり、ニュルッと出る
+   COLOUR and TYPE: ミント #13b5a0 / 肌 / コーラル。M PLUS Rounded 1c
+   LAYOUT: タイトルとHUD→ゲーム窓→ゲージ→器具→戦利品。スマホは縦積み */
+:root{color-scheme:light dark;--bg:light-dark(#e6f6f2,#0c2420);--card:light-dark(#fff,#12322c);--ink:light-dark(#10302b,#e4f5f0);--mute:light-dark(#4b6e67,#9cc3ba);--mint:#13b5a0;--deep:#0d8f7e;--coral:#ff5a4e;--gold:#e8a400}
+:root[data-theme=light]{color-scheme:light}:root[data-theme=dark]{color-scheme:dark}
+*{box-sizing:border-box;min-width:0}
+body{margin:0;-webkit-text-size-adjust:100%;padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);background:var(--bg);color:var(--ink);font:16px/1.55 "M PLUS Rounded 1c",system-ui,sans-serif;overflow-x:clip}
+.wrap{max-width:1000px;margin:0 auto;padding:clamp(14px,3vw,32px) max(4vw,12px) 40px}
+header{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:12px}
+h1{font-size:clamp(28px,5vw,44px);line-height:1.05;margin:0;font-weight:800}
+h1 small{display:block;font-size:14px;font-weight:500;color:var(--mute);margin-top:6px}
+.hud{display:flex;gap:8px;flex-wrap:wrap;align-items:stretch}
+.chip{background:var(--card);border-radius:14px;padding:6px 12px;text-align:center;min-width:72px;box-shadow:0 2px 0 rgba(0,0,0,.08)}
+.chip b{display:block;font-size:22px;line-height:1.1;font-variant-numeric:tabular-nums;white-space:nowrap}
+.chip span{font-size:12px;color:var(--mute);white-space:nowrap}
+.mini{font:inherit;font-size:13px;font-weight:800;border:0;border-radius:14px;padding:6px 12px;min-height:44px;background:var(--card);color:var(--deep);cursor:pointer;box-shadow:0 2px 0 rgba(0,0,0,.08)}
+.mini:focus-visible{outline:3px solid var(--coral)}
+.zbtns{position:absolute;right:10px;top:10px;z-index:2;display:flex;flex-direction:column;gap:6px}
+.zb{font:inherit;font-weight:800;font-size:20px;width:44px;height:44px;border:0;border-radius:12px;background:rgba(0,0,0,.45);color:#fff;cursor:pointer;touch-action:manipulation;-webkit-tap-highlight-color:transparent}.zb.zr{font-size:11px}.zb:focus-visible{outline:3px solid #fff}
+.bye{flex:none;font:inherit;font-weight:800;font-size:15px;color:#fff;background:#ff0033;border:0;border-radius:999px;padding:9px 18px;min-height:44px;box-shadow:0 4px 12px rgba(0,0,0,.3);cursor:pointer;display:flex;flex-direction:column;align-items:center;line-height:1.2}
+.bye{font-size:13px;padding:6px 14px;min-height:38px}
+.trow .bye{justify-content:center;min-height:46px;border-radius:14px;font-size:12px;line-height:1.25;padding:4px 6px;box-shadow:0 3px 0 rgba(0,0,0,.18)}.bye.arm{background:#fff;color:#ff0033}
+.bye:focus-visible{outline:3px solid #fff}
+.bye[hidden]{display:none}
+.mini.post{background:#ff0033;color:#fff}
+.box{background:var(--mint);border-radius:26px;padding:clamp(8px,1.6vw,16px);box-shadow:0 10px 30px rgba(10,80,70,.25)}
+.fig{-webkit-touch-callout:none;-webkit-tap-highlight-color:transparent;position:relative;height:min(64vh,580px);min-height:340px;border-radius:18px;overflow:hidden;touch-action:none;user-select:none;-webkit-user-select:none;cursor:none;background:#d9a98f}
+.fig canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+.meter{display:flex;align-items:center;gap:10px;margin:10px 4px 2px;color:#fff;font-size:13px;font-weight:800}
+.meter>span:first-child{min-width:2.5em}
+.bar{position:relative;flex:1;height:22px;border-radius:9px;background:rgba(0,0,0,.22);overflow:hidden}
+.zone{position:absolute;top:-2px;bottom:-2px;width:3px;margin-left:-1px;background:#ff5a4e;box-shadow:0 0 0 1px rgba(255,255,255,.7)}
+.fill{position:absolute;inset:0 auto 0 0;width:0;background:linear-gradient(90deg,#fff,#ffe1c2 70%,#ff9a7a);border-radius:9px}
+.fill.over{background:var(--coral)}
+.tools{display:grid;gap:6px;margin-top:10px}
+.tgroup{display:grid;grid-template-columns:5.2em minmax(0,1fr);align-items:center;gap:8px}
+.tglabel{color:#fff;font-size:12px;font-weight:800;opacity:.9}
+.trow{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px}
+.tool{display:flex;flex-direction:row;justify-content:center;align-items:center;gap:6px;background:var(--deep);color:#fff;border:0;border-radius:14px;padding:6px 6px;min-height:46px;font:inherit;font-size:13px;font-weight:800;cursor:pointer;box-shadow:0 3px 0 rgba(0,0,0,.18)}
+.tool svg{width:22px;height:22px;flex:none}.tool span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tool kbd{font:inherit;font-size:11px;opacity:.7;font-weight:500}
+.tool[aria-pressed=true]{background:#fff;color:var(--deep);box-shadow:0 0 0 3px var(--coral)}
+.tool:focus-visible{outline:3px solid #fff;outline-offset:2px}
+.hint{color:#fff;font-size:13px;margin:8px 4px 0;font-weight:500;min-height:1.4em}
+.ov{position:absolute;inset:0;display:grid;place-items:center;background:rgba(16,48,43,.55);backdrop-filter:blur(3px);padding:14px;overflow:auto;cursor:auto}
+.ov[hidden]{display:none}
+.panel{background:var(--card);color:var(--ink);border-radius:22px;padding:20px 22px;max-width:520px;width:100%;text-align:center}
+.panel h2{margin:0 0 6px;font-size:26px;line-height:1.15}
+.panel p{margin:6px 0;color:var(--mute);font-size:15px}
+.stages{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin:14px 0 6px}
+.stage{font:inherit;border:0;border-radius:18px;padding:12px 6px;background:var(--bg);color:var(--ink);cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:2px;min-height:44px}
+.stage b{font-size:22px}.stage span{font-size:12px;color:var(--mute)}
+.stage:hover,.stage:focus-visible{outline:3px solid var(--coral)}
+.stage em{font-style:normal;font-size:12px;font-weight:800;color:var(--deep)}
+.rules{text-align:left;font-size:14px;margin:10px 0 0;padding:10px 12px;background:var(--bg);border-radius:14px}
+.rules div{margin:3px 0}
+.big{font-size:clamp(40px,10vw,60px);font-weight:800;line-height:1;margin:8px 0;font-variant-numeric:tabular-nums}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(90px,1fr));gap:6px;margin:12px 0}
+.stats div{background:var(--bg);border-radius:12px;padding:6px}
+.stats b{display:block;font-size:18px;white-space:nowrap}.stats span{font-size:12px;color:var(--mute)}
+.yt{text-align:left;max-width:480px}
+.upl{font-weight:800;color:#ff0033!important;margin:0 0 8px!important}
+.thumb{position:relative;border-radius:14px;overflow:hidden;aspect-ratio:16/9;background:#222}
+.thumb img{width:100%;height:100%;object-fit:cover;display:block}
+.thumb .dur{position:absolute;right:8px;bottom:8px;background:rgba(0,0,0,.8);color:#fff;font-size:12px;padding:1px 6px;border-radius:4px;font-variant-numeric:tabular-nums}
+.thumb .warn{position:absolute;left:8px;top:8px;background:#ffd400;color:#111;font-weight:800;font-size:13px;padding:2px 8px;border-radius:4px}
+.thumb .play{position:absolute;left:50%;top:50%;width:58px;height:40px;margin:-20px 0 0 -29px;background:#ff0033;border-radius:12px;opacity:.92}
+.thumb .play::after{content:"";position:absolute;left:23px;top:11px;border-left:16px solid #fff;border-top:9px solid transparent;border-bottom:9px solid transparent}
+.ttl{display:flex;gap:10px;align-items:center;margin-top:10px}.ttl h2{margin:0!important}
+.rank{flex:none;width:54px;height:54px;border-radius:14px;display:grid;place-items:center;font-size:32px;font-weight:800;color:#fff;background:#ff0033;box-shadow:inset 0 -4px 0 rgba(0,0,0,.2)}
+.rank.SS{font-size:24px;background:linear-gradient(135deg,#ff2d55,#ffcc00,#34c759,#00b7ff,#af52de);box-shadow:0 0 0 3px #fff,0 0 18px rgba(255,204,0,.8)}
+.rank.S{background:linear-gradient(135deg,#ffcf3d,#ff7a00)}.rank.A{background:#ff0033}.rank.B{background:#ff6a3d}.rank.C{background:#5a8fd6}.rank.D{background:#8a8f94}.rank.F{background:#222}
+.yt h2{font-size:19px;line-height:1.35;margin:10px 0 4px;text-wrap:balance}
+.meta{margin:0!important;font-size:14px!important}.meta b{font-size:22px;color:var(--ink);font-variant-numeric:tabular-nums}
+.buzz{display:inline-block;margin-left:6px;font-weight:800;color:#fff;background:#ff0033;border-radius:999px;padding:1px 10px;font-size:13px}
+.cmts{list-style:none;padding:0;margin:8px 0;display:grid;gap:6px;max-height:190px;overflow:auto}
+.cmts li{background:var(--bg);border-radius:12px;padding:6px 10px;font-size:14px}
+.cmts li.anti{background:light-dark(#ffe6e3,#3a1714);color:light-dark(#8a1c12,#ffb4a8)}
+.buzz.fire{background:#222}
+.cmts li.rare{background:linear-gradient(135deg,#fff6d6,#ffe39a);border:2px solid #e8a400;color:#3a2a00;animation:drop .5s ease-out}
+.cmts li.rare small{color:#8a5a00;font-weight:800}
+.cmts li small{display:block;color:var(--mute);font-size:12px}
+.tot{font-size:13px!important}
+.links{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:12px}
+.btn.small{font-size:14px;padding:8px 16px;min-height:44px}
+.panel.wide{max-width:600px;text-align:left}.panel.wide h2{text-align:center}.panel.wide>p{text-align:center}
+.sh{font-size:15px;margin:14px 0 6px}
+.bests{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:6px}
+.bests div{background:var(--bg);border-radius:12px;padding:8px 10px;font-size:13px}.bests b{display:block;font-size:17px}
+.vids{list-style:none;margin:0 0 12px;padding:0;display:grid;gap:8px;max-height:min(28vh,260px);overflow:auto}
+.vids li{display:grid;grid-template-columns:120px minmax(0,1fr);gap:10px;align-items:center}
+.vids img{width:120px;aspect-ratio:16/9;object-fit:cover;border-radius:8px;background:#333;display:block}
+.vids .vt{font-weight:800;font-size:14px;line-height:1.35}.vids .vm{font-size:12px;color:var(--mute)}
+.vids .rk{display:inline-block;min-width:1.8em;text-align:center;border-radius:6px;color:#fff;font-weight:800;font-size:11px;padding:0 4px;margin-right:4px;background:#888}
+.empty2{color:var(--mute);font-size:14px;text-align:center;padding:16px}
+.tr{font-size:13px;color:var(--mute)!important;margin:4px 0!important}.trbtns{display:flex;gap:8px;flex-wrap:wrap}
+#trBox{width:100%;height:80px;margin-top:6px;font:12px/1.4 monospace;border-radius:10px;border:1px solid var(--mute);padding:8px;background:var(--bg);color:var(--ink)}
+.chan{font-weight:800;color:var(--deep)!important;margin-top:2px!important}
+.achs{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:6px;max-height:min(44vh,400px);overflow:auto;margin:10px 0 12px}
+.ach{background:var(--bg);border-radius:12px;padding:8px 10px;font-size:12px;color:var(--mute)}.ach b{display:block;font-size:14px;color:var(--ink)}.ach.on{background:linear-gradient(135deg,#fff6d6,#ffe39a);color:#6a4a00}.ach.on b{color:#3a2a00}
+.mis{border-radius:12px;padding:8px 10px;font-weight:800;margin:6px 0!important}.mis.ok{background:#dff7ef;color:#0b6b5b!important}.mis.ng{background:var(--bg);color:var(--mute)!important}
+.lens{margin:0 0 12px;padding:0;list-style:none;display:grid;gap:4px;max-height:min(34vh,320px);overflow:auto}
+.lens li{display:grid;grid-template-columns:2.2em minmax(0,1fr) auto;gap:8px;align-items:center;background:var(--bg);border-radius:10px;padding:6px 10px;font-size:14px}
+.lens li i{font-style:normal;font-weight:800;color:var(--mute)}.lens li b{font-variant-numeric:tabular-nums;white-space:nowrap}.lens li.top{background:linear-gradient(135deg,#fff6d6,#ffe39a);color:#3a2a00}.lens li small{color:var(--mute);font-size:12px}
+.zkgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px;max-height:min(36vh,330px);overflow:auto;margin:10px 0 12px}
+.zk{background:var(--bg);border-radius:12px;padding:8px 10px;font-size:13px}.zk b{display:block;font-size:15px}.zk span{color:var(--mute);font-size:12px}
+.zk.no{opacity:.55}.zk.no b{letter-spacing:.1em}.zk.cel{background:linear-gradient(135deg,#fff6d6,#ffe39a);color:#3a2a00}.zk.cel span{color:#7a5a10}
+.newzk{background:linear-gradient(135deg,#fff6d6,#ffe39a);color:#5a3d00!important;border-radius:12px;padding:8px 10px;font-weight:800}
+.share{margin:8px 0 4px}.share-b{background:#1d9bf0;box-shadow:0 4px 0 #1478bd;width:100%;margin:0}
+#shareBox{width:100%;height:96px;margin-top:6px;font:inherit;font-size:13px;border-radius:10px;border:1px solid var(--mute);padding:8px;background:var(--bg);color:var(--ink)}
+.btn{font:inherit;font-weight:800;font-size:17px;border:0;border-radius:999px;padding:11px 26px;min-height:48px;background:var(--coral);color:#fff;cursor:pointer;box-shadow:0 4px 0 #c23a30;margin:4px}
+.btn.sub{background:var(--bg);color:var(--ink);box-shadow:0 4px 0 rgba(0,0,0,.15)}
+.btn:active{transform:translateY(2px)}
+.btn:focus-visible{outline:3px solid var(--ink);outline-offset:3px}
+.tray{margin-top:16px;background:var(--card);border-radius:20px;padding:14px 16px}
+.tray h3{margin:0 0 8px;font-size:17px;display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap}
+.tray h3 span{color:var(--mute);font-weight:500;font-size:14px}
+.plugs{display:flex;flex-wrap:wrap;gap:6px 10px;min-height:70px;align-items:flex-end;padding:8px;border-radius:12px;background:light-dark(#f7f7f4,#0f2a25);background-image:radial-gradient(light-dark(#e6e6de,#16362f) 1px,transparent 1.4px);background-size:8px 8px}
+.plug{display:flex;flex-direction:column;align-items:center;font-size:11px;color:var(--mute);white-space:nowrap;animation:drop .35s ease-out}
+.plug.gold small{color:var(--gold);font-weight:800}
+.empty{color:var(--mute);font-size:14px;margin:auto;align-self:center}
+.note{font-size:12px;color:var(--mute);margin:12px 4px 0}
+@keyframes drop{from{transform:translateY(-14px);opacity:0}}
+@media(prefers-reduced-motion:reduce){.plug{animation:none}}
+.tool,.btn,.mini,.stage,.bye{touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+:root{--vh:100dvh}
+@media(max-width:600px){
+ html,body{height:100%;overflow:hidden;overscroll-behavior:none}
+ .wrap{height:100dvh;display:flex;flex-direction:column;padding:max(6px,env(safe-area-inset-top)) 6px max(6px,env(safe-area-inset-bottom));box-sizing:border-box}
+ header{flex:none;flex-direction:row!important;align-items:center!important;flex-wrap:nowrap!important;gap:6px!important;margin-bottom:6px!important}
+ h1{font-size:17px!important;white-space:nowrap}h1 small{display:none}
+ .hud{flex:1;flex-wrap:nowrap!important;justify-content:flex-end!important;gap:4px!important}.chip{flex:0 1 auto!important;min-width:0!important;padding:3px 7px!important;border-radius:10px}.chip b{font-size:15px!important}.chip span{font-size:10px}.mini{flex:none!important;min-height:36px!important;padding:2px 8px!important;font-size:11px!important;border-radius:10px}
+ .box{flex:1;min-height:0;display:flex;flex-direction:column;padding:5px!important;border-radius:16px!important}
+ .fig{flex:1;height:auto!important;min-height:0!important}
+ .meter{flex:none;margin:5px 2px 0!important;font-size:11px}.bar{height:14px!important}.meter>span:last-child{min-width:4em!important;font-size:11px}
+ .tools{flex:none;grid-template-columns:repeat(6,minmax(0,1fr))!important;gap:4px!important;margin-top:5px!important}.tgroup,.trow{display:contents!important}.tglabel{display:none}
+ .tool{flex-direction:column!important;gap:0!important;min-height:44px!important;padding:3px 1px!important;font-size:9.5px!important;border-radius:10px!important}.tool svg{width:18px!important;height:18px!important}
+ .hint,.note{display:none}
+}
+@media(max-width:600px){.ov{position:fixed;z-index:50;background:rgba(16,48,43,.82);padding:max(14px,env(safe-area-inset-top)) 10px max(14px,env(safe-area-inset-bottom));align-items:start}.ov .panel{margin:auto 0}.wrap{padding:8px 8px 24px}h1{font-size:24px}h1 small{font-size:12px;margin-top:2px}header{gap:6px!important;margin-bottom:6px}.chip{padding:4px 6px}.chip b{font-size:18px}.mini{min-height:40px;padding:4px 8px;font-size:12px}
+ .box{border-radius:18px;padding:6px}.fig{height:min(52vh,460px)!important;min-height:300px;border-radius:14px}.meter{margin:6px 2px 0}.bar{height:18px}.hint{font-size:12px;margin-top:4px}
+ .trow .bye{font-size:9.5px!important;padding:2px!important;min-height:44px!important;border-radius:10px!important;line-height:1.15}.panel{padding:14px 12px}.panel h2{font-size:21px}.stats{gap:4px}.stats b{font-size:15px}
+ .vids li{grid-template-columns:96px minmax(0,1fr)}.vids img{width:96px}.yt h2{font-size:16px}.rank{width:44px;height:44px;font-size:26px}
+.tool{font-size:11px;padding:4px 2px;flex-direction:column;gap:1px}.tgroup{grid-template-columns:minmax(0,1fr);gap:3px}.tglabel{font-size:11px}header{flex-direction:column;align-items:stretch}.hud{justify-content:space-between}.chip,.mini{flex:1;min-width:0}.fig{height:56vh}.tool kbd{display:none}.stages{grid-template-columns:minmax(0,1fr)}.stage{flex-direction:row;justify-content:space-between;padding:10px 14px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>ヌキヌキ処置室<small id="sub">ひげ・角栓・ニキビ・粉瘤。60秒で撮影してYouTubeに投稿</small></h1>
+    <div class="hud">
+      <div class="chip"><b id="hLeft">—</b><span>残り</span></div>
+      <div class="chip"><b id="hScore">100</b><span>綺麗さ</span></div>
+      <div class="chip"><b id="hTime">60</b><span>残り秒</span></div>
+            <button class="mini" id="btnSel">処置を選ぶ</button>
+    </div>
+  </header>
+
+  <div class="box">
+    <div class="fig" id="fig">
+      <canvas id="cv"></canvas>
+      <div class="zbtns"><button class="zb" id="zIn" aria-label="ズームイン">＋</button><button class="zb" id="zOut" aria-label="ズームアウト">－</button><button class="zb zr" id="zRes" aria-label="等倍に戻す">等倍</button></div>
+      <div class="ov" id="ovStart">
+        <div class="panel">
+          <h2>今日は何を撮る？</h2><p>1本60秒。キレイに仕上げるほどバズる</p>
+          <div class="stages" id="stages"></div>
+          <div class="links"><button class="btn sub small" id="btnCh">マイチャンネル</button><button class="btn sub small" id="btnZk">長さ記録 <span id="zkCount"></span></button><button class="btn sub small" id="btnAch">実績 <span id="achCount"></span></button></div>
+        </div>
+      </div>
+      <div class="ov" id="ovCh" hidden>
+        <div class="panel wide">
+          <h2>マイチャンネル</h2>
+          <div class="stats" id="chStats"></div>
+          <h3 class="sh">ステージ別の自己ベスト</h3>
+          <div class="bests" id="chBest"></div>
+          <h3 class="sh">投稿した動画</h3>
+          <ul class="vids" id="chVids"></ul>
+          <h3 class="sh">別の端末に引き継ぐ</h3>
+          <p class="tr">この端末の記録をコードにして、別の端末で貼り付けると続きから遊べます（サムネイル画像は引き継がれません）</p>
+          <div class="trbtns"><button class="btn small" id="btnExp">引き継ぎコードをコピー</button><button class="btn sub small" id="btnImp">コードを貼り付けて読み込む</button></div>
+          <textarea id="trBox" hidden aria-label="引き継ぎコード"></textarea>
+          <button class="btn small" id="btnImpGo" hidden>このコードで読み込む</button>
+          <p class="tr" id="trMsg"></p>
+          <button class="btn sub" data-back>戻る</button>
+        </div>
+      </div>
+      <div class="ov" id="ovZk" hidden>
+        <div class="panel wide">
+          <h2>長さ記録</h2>
+          <p>抜いた角栓と毛の長さランキング。どこまで伸ばせる？</p>
+          <div class="bests" id="lenBest"></div>
+          <h3 class="sh">歴代トップ15</h3>
+          <ol class="lens" id="zkGrid"></ol>
+          <button class="btn sub" data-back>戻る</button>
+        </div>
+      </div>
+      <div class="ov" id="ovAch" hidden>
+        <div class="panel wide">
+          <h2>実績 <small id="achN"></small></h2>
+          <div class="achs" id="achGrid"></div>
+          <button class="btn sub" data-back>戻る</button>
+        </div>
+      </div>
+      <div class="ov" id="ovEnd" hidden>
+        <div class="panel yt">
+          <p class="upl">動画をアップロードしました</p>
+          <div class="thumb"><img id="eThumb" alt="投稿した動画のサムネイル"><span class="warn">閲覧注意</span><span class="dur" id="eDur">0:00</span><span class="play"></span></div>
+          <div class="ttl"><span class="rank" id="eRank">A</span><h2 id="eTitle"></h2></div>
+          <p class="meta"><b id="eViews">0</b> 回視聴 <span id="eBuzz" class="buzz"></span></p>
+          <div class="stats">
+            <div><b id="eLikes">0</b><span>高評価</span></div>
+            <div><b id="eBad">0</b><span>低評価</span></div>
+            <div><b id="eTempo">—</b><span>テンポ</span></div>
+            <div><b id="eCare">0</b><span>綺麗さ</span></div>
+          </div>
+          <ul class="cmts" id="eCmts"></ul>
+          <p id="eTotal" class="tot"></p>
+          <p class="mis" id="eMis" hidden></p>
+          <p class="newzk" id="eNew" hidden></p>
+          <div class="share"><button class="btn share-b" id="btnShare">結果をコピーしてシェア</button><textarea id="shareBox" readonly hidden aria-label="シェア用テキスト"></textarea></div>
+          <button class="btn" id="btnNext">次の動画を撮る</button><button class="btn sub" id="btnMenu">処置を選ぶ</button><button class="btn sub" id="btnCh2">マイチャンネル</button>
+        </div>
+      </div>
+    </div>
+    <div class="meter"><span id="mName">圧力</span><div class="bar"><div class="fill" id="fill"></div><div class="zone" id="zone" title="これより強いと肌が傷む"></div></div><span id="mLabel" style="min-width:5.5em;text-align:right">—</span><button class="bye" id="btnBye" hidden>ご視聴ありがとうございました</button></div>
+    <div class="tools" id="tools"></div>
+    <p class="hint" id="hint"></p>
+  </div>
+
+  <section class="tray" hidden><span id="trayInfo"></span><div id="plugs"></div></section>
+  <p class="note">ゲームです。実際の粉瘤やニキビを自分でつぶす・切るのは感染や跡の原因になるので、気になるときは皮膚科へ。</p>
+</div>
+
+<script>
+{
+const cv=document.getElementById('cv'),fig=document.getElementById('fig'),ctx=cv.getContext('2d');
+const $=id=>document.getElementById(id);
+const STAGES={
+  hair:{name:'ひげ',place:'あご',count:12,best:'ピンセット',hint:'ピンセットでゆっくり一定のスピードで引く。赤く腫れたポツは埋没毛：指か押し出す道具で押して毛を出してからピンセットで',
+    base:[226,178,156],dome:40,gd:.45,gw:1.4,red:.35,oil:.35},
+  plug:{name:'角栓',place:'鼻',count:10,best:'指・押し出す道具',hint:'角栓は1つずつ性格が違う。黒く太い「がんこ」「巨大」は途中で引っかかる。グッと強めに押すと“ポコッ”と抜ける。肌の赤みに注意',
+    base:[236,184,158],dome:80,gd:.55,gw:1.3,red:.8,oil:1},
+  zit:{name:'ニキビ',place:'頬',count:9,best:'指・押し出す道具',hint:'黄色い頭は押してプチッ→芯まで出す。芯はピンセットでつまんで抜ける（速いとちぎれる）。白ニキビはメスでちょんと刺すと楽。赤く腫れたニキビは触らずガマン',
+    base:[238,192,170],dome:35,gd:.42,gw:1.4,red:.55,oil:.5},
+  cyst:{name:'粉瘤',place:'背中',count:3,best:'メス→指→ピンセット',hint:'メスで切開すると楽に出る（なぞった形に切れる）。切らずに押したり、ピンセットで無理やり引き出すこともできるけど傷みやすい。最後に袋をピンセットで',
+    base:[240,203,182],dome:30,gd:.38,gw:1.6,red:.3,oil:.25}
+};
+const TOOLS=[
+  {id:'finger',name:'指',svg:'<path d="M10 28V12a3 3 0 0 1 6 0v8m0-3a3 3 0 0 1 6 0v6c0 4-3 6-7 6" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/>'},
+  {id:'pusher',name:'押し出す道具',svg:'<path d="M8 26 22 10" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/><circle cx="24.5" cy="7.5" r="3.6" fill="none" stroke="currentColor" stroke-width="2.2"/>'},
+  {id:'tweez',name:'ピンセット',svg:'<path d="M9 5l7 22M23 5l-7 22" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/>'},
+  {id:'scalpel',name:'メス',svg:'<path d="M5 27 17 15" stroke="currentColor" stroke-width="3" stroke-linecap="round"/><path d="M17 15c4-5 8-8 10-10-1 4-4 9-8 12z" fill="currentColor"/>'},
+  {id:'tissue',name:'ティッシュ',svg:'<path d="M6 11h20l-3 15H9z" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"/><path d="M11 11c0-4 3-7 5-7s3 2 3 4c0-2 2-3 3-1" fill="none" stroke="currentColor" stroke-width="2"/>'},
+  {id:'toner',name:'化粧水',svg:'<rect x="11" y="9" width="10" height="19" rx="3" fill="none" stroke="currentColor" stroke-width="2.2"/><path d="M13 9V5h6v4" fill="none" stroke="currentColor" stroke-width="2"/><path d="M11 17h10" stroke="currentColor" stroke-width="1.6"/>'},
+  {id:'milk',name:'乳液',svg:'<path d="M11 13h10v13a2 2 0 0 1-2 2h-6a2 2 0 0 1-2-2z" fill="none" stroke="currentColor" stroke-width="2.2"/><path d="M14 13V9h4v4M16 9V5h6" fill="none" stroke="currentColor" stroke-width="2"/>'},
+  {id:'ice',name:'保冷剤',svg:'<rect x="5" y="9" width="22" height="15" rx="4" fill="none" stroke="currentColor" stroke-width="2.2"/><path d="M16 12v9M12 14l8 5M20 14l-8 5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>'},
+  {id:'dis',name:'消毒液',svg:'<path d="M12 12h8v15a2 2 0 0 1-2 2h-4a2 2 0 0 1-2-2z" fill="none" stroke="currentColor" stroke-width="2.2"/><path d="M14 12V8h4v4M18 8l5-3" fill="none" stroke="currentColor" stroke-width="2"/><path d="M13 20h6" stroke="currentColor" stroke-width="1.6"/>'},
+  {id:'oint',name:'軟膏',svg:'<path d="M5 20l14-9 6 9-14 6z" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"/><path d="M19 11l4-5" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>'},
+  {id:'band',name:'絆創膏',svg:'<rect x="4" y="11" width="24" height="10" rx="5" transform="rotate(-30 16 16)" fill="none" stroke="currentColor" stroke-width="2.2"/><rect x="12" y="12" width="8" height="8" rx="1.5" transform="rotate(-30 16 16)" fill="currentColor" opacity=".45"/>'}
+];
+const PRESS={finger:{rate:1,lo:.5,hi:.85,spd:1},pusher:{rate:.75,lo:.4,hi:.88,spd:1.35}};
+let W=0,H=0,dpr=1,mm=5,skin=null,stage='plug',tool='finger',seed=1;
+let objs=[],parts=[],floats=[],scars=[],running=false,score=0,combo=0,maxCombo=0,wins=0,fails=0,trayN=0;
+let coldSp=[],iceT=0,lastF={o:null,t:0},cd=0,cdStage=-1,procPen=0,orderPen=0,freeCare=[],iceOn=false,time=60,warned=false,st={},recT=0,sheen=[],allDone=false,hold={d:0,time:0,sx:0,sy:0},held=null,grab=null,stroke=null,wiping=false,deb=[],tis=[],debHint=false,ptr={x:-99,y:-99,in:false},last=0,ac=null,msgT={};
+const total=k=>{try{return+localStorage.getItem('nuki-total-'+k)||0}catch(e){return 0}};
+const bestV=k=>{try{return+localStorage.getItem('nuki-bestv-'+k)||0}catch(e){return 0}};
+const addTotal=k=>{try{localStorage.setItem('nuki-total-'+k,total(k)+1)}catch(e){}};
+
+/* ---------- UI ---------- */
+function stageCards(){try{const b=lenBest();$('zkCount').textContent=b?`最長${b.toFixed(0)}mm`:'';$('achCount').textContent=`${Object.keys(LS.get('nuki-ach',{})).length}/${ACH.length}`;const v=LS.get('nuki-vids',[]),subs=Math.round(v.reduce((a,q)=>a+q.views,0)*.004)}catch(e){}$('stages').innerHTML=Object.entries(STAGES).map(([k,s])=>`<button class="stage" data-s="${k}"><b>${s.name}</b><span>${s.place}</span><em>最高 ${fmtV(bestV(k))}回再生</em></button>`).join('')}
+stageCards();
+const TDESC={finger:'長押しで押し出す。赤い線を越えると肌が傷む',pusher:'指より狙いやすく、力が入りやすい',tweez:'つまんで引き抜く。速く引くとちぎれる',scalpel:'なぞって切開。ちょんと刺すと小さな穴',tissue:'出てきたもの・血・化粧水を拭き取る',toner:'なでて肌を整える。毛穴も引き締まる',milk:'なでて保湿する',ice:'押し当てている間、赤みが引いて毛穴が引き締まる',dis:'傷をタップして消毒',oint:'傷をタップして軟膏を塗る',band:'タップして絆創膏を貼る'};
+const TGROUP=[['処置',['finger','pusher','tweez','scalpel']],['拭く・保湿',['tissue','toner','milk','ice']],['傷のケア',['dis','oint','band']]];
+$('tools').innerHTML=TGROUP.map(([g,ids])=>`<div class="tgroup"><span class="tglabel">${g}</span><div class="trow">${ids.map(id=>{const t=TOOLS.find(q=>q.id===id);return`<button class="tool" data-t="${t.id}" aria-pressed="${t.id===tool}" title="${TDESC[id]}"><svg viewBox="0 0 32 32">${t.svg}</svg><span>${t.name}</span></button>`}).join('')}</div></div>`).join('');
+function setTool(id){tool=id;if($('hint'))$('hint').textContent=TDESC[id]||'';held=null;grab=null;stroke=null;document.querySelectorAll('.tool').forEach(b=>b.setAttribute('aria-pressed',b.dataset.t===id))}
+$('tools').addEventListener('click',e=>{const b=e.target.closest('.tool');if(b)setTool(b.dataset.t)});
+
+setTimeout(stageCards,0);
+$('stages').addEventListener('click',e=>{const b=e.target.closest('.stage');if(b)start(b.dataset.s)});
+$('btnNext').addEventListener('click',()=>start(stage));
+
+const menu=()=>{running=false;cd=0;$('ovEnd').hidden=true;stageCards();$('ovStart').hidden=false};
+$('btnMenu').addEventListener('click',menu);
+$('zIn').addEventListener('click',()=>zoomBtn(1.35));$('zOut').addEventListener('click',()=>zoomBtn(1/1.35));$('zRes').addEventListener('click',()=>zoomBtn(.01));
+let ending=false,greeted=false;
+{const row=document.querySelector('.tgroup:last-child .trow');if(row)row.appendChild($('btnBye'))}
+let byeArm=0;$('btnBye').addEventListener('click',()=>{if(!running||ending)return;const b=$('btnBye');if(performance.now()-byeArm>2500){byeArm=performance.now();b.classList.add('arm');b.textContent='もう一度押すと終了';setTimeout(()=>{if(performance.now()-byeArm>=2400){b.classList.remove('arm');b.textContent='ご視聴ありがとうございました'}},2500);return}byeArm=0;b.classList.remove('arm');b.textContent='ご視聴ありがとうございました';ending=true;greeted=true;floats.push({x:W/2,y:H*.45,txt:'ご視聴ありがとうございました！',c:'#fff',t:-.6,big:1});tone(660,880,.15,'triangle',.18);setTimeout(()=>tone(880,1320,.2,'triangle',.15),180);setTimeout(()=>{ending=false;if(running)complete()},1500)});$('btnSel').addEventListener('click',menu);
+
+/* ---------- ノイズ ---------- */
+function hash(x,y){let h=(Math.imul(x,374761393)+Math.imul(y,668265263)+Math.imul(seed,1442695041))|0;h=Math.imul(h^(h>>>13),1274126177);return((h^(h>>>16))>>>0)/4294967296}
+function noise(x,y){const xi=Math.floor(x),yi=Math.floor(y),xf=x-xi,yf=y-yi,u=xf*xf*(3-2*xf),v=yf*yf*(3-2*yf);
+  const a=hash(xi,yi),b=hash(xi+1,yi),c=hash(xi,yi+1),d=hash(xi+1,yi+1);return a+(b-a)*u+(c-a)*v+(a-b-c+d)*u*v}
+
+/* ---------- 肌を焼く（高さマップ→表面下散乱つき陰影→被写界深度） ---------- */
+function box(src,dst,w,h,r,hz){
+  const n=hz?w:h,m=hz?h:w,sa=hz?1:w,d=2*r+1;
+  for(let j=0;j<m;j++){const b0=hz?j*w:j;let acc=0;
+    for(let i=-r;i<=r;i++)acc+=src[b0+Math.min(n-1,Math.max(0,i))*sa];
+    for(let i=0;i<n;i++){dst[b0+i*sa]=acc/d;acc+=src[b0+Math.min(n-1,i+r+1)*sa]-src[b0+Math.max(0,i-r)*sa]}}
+}
+function blur(a,w,h,r){const t=new Float32Array(a.length),o=new Float32Array(a.length);box(a,t,w,h,r,1);box(t,o,w,h,r,0);box(o,t,w,h,r,1);box(t,o,w,h,r,0);return o}
+function bake(){
+  if(!W||!H)return;
+  const S=STAGES[stage],s=Math.min(dpr,1.1),w=Math.max(4,Math.round(W*s)),h=Math.max(4,Math.round(H*s)),N=w*h,u=mm/5;
+  const hm=new Float32Array(N),al=new Float32Array(N*3),oil=new Float32Array(N);
+  const ang=[.35,1.3,2.35],A=ang.map(a=>[Math.cos(a),Math.sin(a)]),per=[11,14,8].map(p=>p*u);
+  for(let y=0;y<h;y++)for(let x=0;x<w;x++){
+    const X=x/s,Y=y/s,i=y*w+x;
+    const n1=noise(X/140,Y/140)*.6+noise(X/70+9,Y/70)*.4,n2=noise(X/24,Y/24)*.6+noise(X/11,Y/11+5)*.4,n3=noise(X/3.2,Y/3.2),n4=noise(X/1.6+40,Y/1.6);
+    let g=0;for(let k=0;k<3;k++){const p=per[k],q=X*A[k][0]+Y*A[k][1]+n2*p*1.3,f=q/p-Math.floor(q/p),d=Math.min(f,1-f)*p;g+=Math.exp(-d*d/(.55*S.gw*u))*(k===2?.4:1)*(.1+n1*n1*1.4)}
+    const dx=(X-W*.5)/(W*.6),dy=(Y-H*.42)/(H*.75);
+    hm[i]=S.dome*Math.exp(-(dx*dx+dy*dy))+n1*5+n2*1.1+n3*.55+n4*.18-g*S.gd;
+    const red=Math.max(0,n1-.42)*S.red*2.2,t=(n2-.5);
+    const cap=Math.abs(noise(X/38+3,Y/38)-.5),cv2=cap<.007?(1-cap/.007)*S.red*.75*(n1>.5?1:.15):0;
+    const mel=Math.max(0,noise(X/90+20,Y/90)*.6+noise(X/45,Y/45+7)*.4-.58)*1.5;
+    al[i*3]=S.base[0]+red*8+t*8-mel*22+cv2*8;al[i*3+1]=S.base[1]-red*30+t*8-mel*36-cv2*42;al[i*3+2]=S.base[2]-red*22+t*6-mel*36-cv2*32;
+    oil[i]=S.oil*(.3+n1*.9);
+  }
+  const Rn=()=>hash(Math.random()*1e6|0,7);
+  function stamp(cx,cy,r,depth,col,ca){
+    const x0=Math.max(1,Math.floor(cx-r*3)),x1=Math.min(w-2,Math.ceil(cx+r*3)),y0=Math.max(1,Math.floor(cy-r*3)),y1=Math.min(h-2,Math.ceil(cy+r*3));
+    for(let y=y0;y<=y1;y++)for(let x=x0;x<=x1;x++){const d2=((x-cx)**2+(y-cy)**2)/(r*r),e=Math.exp(-d2),i=y*w+x;hm[i]-=depth*e;if(col){const m=ca*Math.exp(-d2*1.6);al[i*3]+=(col[0]-al[i*3])*m;al[i*3+1]+=(col[1]-al[i*3+1])*m;al[i*3+2]+=(col[2]-al[i*3+2])*m}}
+  }
+  const area=W*H;
+  if(stage==='plug')for(let k=0;k<area/520;k++){const r=(.7+Rn()*1.2)*s*u;stamp(Rn()*w,Rn()*h,r,.9+Rn()*.9,Rn()<.5?[92,66,52]:[196,136,114],.5+Rn()*.4)}
+  if(stage==='hair'){for(let k=0;k<area/260;k++){const cx=Rn()*w,cy=Rn()*h;stamp(cx,cy,1.6*s*u,.15,[120,112,122],.35);stamp(cx,cy,.5*s*u,.5,[45,38,38],.9)}}
+  if(stage==='zit'){for(let k=0;k<area/1100;k++)stamp(Rn()*w,Rn()*h,(.5+Rn()*.6)*s*u,.6,[190,140,120],.3);for(let k=0;k<area/9000;k++)stamp(Rn()*w,Rn()*h,(2+Rn()*3)*s*u,-.4,[222,135,125],.4)}
+  if(stage==='cyst'){for(let k=0;k<area/1600;k++)stamp(Rn()*w,Rn()*h,(.5+Rn()*.5)*s*u,.5,[200,150,130],.3);
+    for(let k=0;k<4;k++)stamp(Rn()*w,Rn()*h,(1.5+Rn()*2)*s*u,-.4,[130,85,65],.8);
+    for(let k=0;k<area/30000;k++)stamp(Rn()*w,Rn()*h,(3+Rn()*3)*s*u,-.6,[225,140,130],.35)}
+  // 光：鋭い拡散＋ぼかした拡散（赤は肌の中で広く散る）＋2段の鏡面反射
+  const nl=(a,b,c)=>{const l=Math.hypot(a,b,c);return[a/l,b/l,c/l]},L=nl(-.5,-.6,.65),Hv=nl(L[0],L[1],L[2]+1);
+  const df=new Float32Array(N),sp=new Float32Array(N);
+  for(let y=0;y<h;y++)for(let x=0;x<w;x++){
+    const i=y*w+x,xl=x>0?i-1:i,xr=x<w-1?i+1:i,yu=y>0?i-w:i,yd=y<h-1?i+w:i;
+    let nx=(hm[xl]-hm[xr])*.34*s,ny=(hm[yu]-hm[yd])*.34*s;const l=Math.sqrt(nx*nx+ny*ny+1);nx/=l;ny/=l;const nz=1/l;
+    df[i]=Math.max(0,(nx*L[0]+ny*L[1]+nz*L[2]+.3)/1.3);
+    const hd=Math.max(0,nx*Hv[0]+ny*Hv[1]+nz*Hv[2]);sp[i]=(Math.pow(hd,70)*150+Math.pow(hd,9)*22)*oil[i];
+  }
+  const bl=blur(df,w,h,Math.max(1,Math.round(2.2*s)));
+  const img=new ImageData(w,h),D=img.data;
+  for(let y=0;y<h;y++)for(let x=0;x<w;x++){
+    const i=y*w+x,a=df[i],b=bl[i],vx=x/w-.5,vy=y/h-.45,vg=1-.5*(vx*vx+vy*vy)*1.6,gr=(hash(x,y+999)-.5)*5;
+    const dR=.15*a+.85*b,dG=.55*a+.45*b,dB=.62*a+.38*b;
+    D[i*4]=al[i*3]*(.55+.55*dR)*vg+(1-b)*12+sp[i]+gr;D[i*4+1]=al[i*3+1]*(.46+.63*dG)*vg+sp[i]*.96+gr;D[i*4+2]=al[i*3+2]*(.44+.63*dB)*vg+sp[i]*.92+gr;D[i*4+3]=255;
+  }
+  const sharp=document.createElement('canvas');sharp.width=w;sharp.height=h;const sg=sharp.getContext('2d');sg.putImageData(img,0,0);
+  // 産毛
+  if(stage!=='hair'){sg.lineCap='round';for(let k=0;k<area/1000;k++){const x=Rn()*w,y=Rn()*h,a=.9+(noise(x/80,y/80)-.5)*2,l=(3+Rn()*7)*s*u,c=(Rn()-.5)*l*.5,ex=x+Math.cos(a)*l,ey=y+Math.sin(a)*l,mx=(x+ex)/2-Math.sin(a)*c,my=(y+ey)/2+Math.cos(a)*c;
+    sg.strokeStyle='rgba(90,45,35,.13)';sg.lineWidth=.9*s;sg.beginPath();sg.moveTo(x+s,y+1.3*s);sg.quadraticCurveTo(mx+s,my+1.3*s,ex+s,ey+1.3*s);sg.stroke();
+    sg.strokeStyle='rgba(255,238,222,.32)';sg.lineWidth=.6*s;sg.beginPath();sg.moveTo(x,y);sg.quadraticCurveTo(mx,my,ex,ey);sg.stroke()}}
+  // 被写界深度：中心はシャープ、周辺はボケる
+  skin=document.createElement('canvas');skin.width=w;skin.height=h;const g=skin.getContext('2d');
+  g.filter=`blur(${(2.4*s).toFixed(1)}px)`;g.drawImage(sharp,0,0);g.filter='none';
+  const m=document.createElement('canvas');m.width=w;m.height=h;const mg=m.getContext('2d');mg.drawImage(sharp,0,0);mg.globalCompositeOperation='destination-in';
+  const rgm=mg.createRadialGradient(w*.5,h*.48,Math.min(w,h)*.32,w*.5,h*.48,Math.max(w,h)*.62);rgm.addColorStop(0,'#000');rgm.addColorStop(1,'rgba(0,0,0,0)');mg.fillStyle=rgm;mg.fillRect(0,0,w,h);
+  g.drawImage(m,0,0);
+}
+let rt;function resize(){dpr=Math.min(2,window.devicePixelRatio||1);W=fig.clientWidth;H=fig.clientHeight;cv.width=W*dpr;cv.height=H*dpr;ctx.setTransform(dpr,0,0,dpr,0,0);mm=Math.max(3.6,Math.min(W,H)/85);clearTimeout(rt);rt=setTimeout(bake,skin?150:0)}
+const ro=new ResizeObserver(resize);ro.observe(fig);
+
+/* ---------- 患部をつくる ---------- */
+function spawn(){
+  const gap=stage==='cyst'?mm*30:stage==='hair'?mm*11:stage==='zit'?mm*17:mm*13,m=stage==='cyst'?.18:.08;
+  for(let k=0;k<80;k++){
+    const x=m+Math.random()*(1-2*m),y=(stage==='cyst'?.22:.12)+Math.random()*(stage==='cyst'?.58:.78);
+    if(!objs.every(o=>Math.hypot((o.x-x)*W,(o.y-y)*H)>gap))continue;
+    const gold=Math.random()<.1,o={kind:stage,x,y,gold,p:0,prog:0,over:false,state:'idle',t:0,seed:Math.random()*9,tension:0,brit:.5+Math.random()*1.8};
+    if(stage==='plug')plugType(o,gold);
+    if(stage==='hair'){o.vis=.8+Math.random()*1.6;o.root=gold?7+Math.random()*3:3.5+Math.random()*2.5;o.len=o.vis+o.root;o.ang=Math.PI/2+(Math.random()-.5)*1.3;o.r=mm*(gold?.42:.3);o.stick=Math.random()<.35?1.1+Math.random()*.6:.35+Math.random()*.4;o.ing=Math.random()<.3;o.em=0;o.rate=.5;o.th=.34;o.bn=.5+Math.random()*.3;if(o.ing){o.vis0=o.vis;o.long=Math.random()<.45;o.turns=o.long?2.6+Math.random()*1.4:1}}
+    if(stage==='cyst'){o.r=mm*(5.5+Math.random()*3)*(gold?1.25:1);o.phase='intact';o.rate=.3+Math.random()*.2;o.blood=[];o.th=.34;o.bn=.8+Math.random()*.4}
+    if(stage==='zit'){const q=Math.random(),rn=()=>Math.random();o.sub=q<.28?'pus':q<.38?'bigpus':q<.56?'white':q<.74?'black':q<.9?'red':'nodule';o.noTouch=o.noTouch||o.sub==='nodule';if(o.noTouch)o.gold=false;
+      o.r=mm*{pus:1.8+rn()*1.2,bigpus:3+rn()*1.2,white:1.3+rn()*.7,black:1.6+rn()*.7,red:2.4+rn()*1.4,nodule:3.6+rn()*1.6}[o.sub]*(o.gold?1.3:1);o.phase=o.sub==='white'?'closed':'open';
+      o.th={pus:.26,bigpus:.3,white:.32,black:.3}[o.sub]??.3;o.bn=.45+rn()*.45;o.rate=o.noTouch?1.5:.55+rn()*.3;o.len=o.sub==='black'?3+rn()*4:o.r/mm;o.pop=false;o.touched=false;if(o.sub==='black'){o.T=PT.normal;o.type='normal';o.curl=.6}}
+    objs.push(o);return true;
+  }
+  return false;
+}
+const P=o=>[o.x*W,o.y*H];
+const PT={
+  soft:{n:'やわらか',len:[9,19],r:[.95,1.3],rate:[.4,.6],stk:[0,0],need:[0,0],spd:1.7,zl:-.05,zh:.04,mul:.8,vm:1.2,col:['#b5a88a','#e4dbc4','#f8f4e8'],tip:['#a39482','#6a5a4a'],lab:'ニュルル〜'},
+  normal:{n:'ふつう',len:[4,11],r:[1.05,1.5],rate:[.5,1],stk:[0,1],need:[.5,.8],spd:1,zl:0,zh:0,mul:1,vm:1,col:['#a8925f','#d6c391','#ece1bd'],tip:['#6f5c4a','#21170f'],lab:'ニュルッ'},
+  hard:{n:'がんこ',len:[3,7],r:[1.3,1.8],rate:[.75,1.1],stk:[2,2],need:[.7,1.1],spd:.8,zl:.05,zh:-.04,mul:2,vm:.6,col:['#857148','#b39e68','#cdbb88'],tip:['#3e3226','#0d0907'],lab:'ズボッ！がんこ角栓'},
+  monster:{n:'特大ロング',len:[35,65],r:[1.15,1.45],rate:[.5,.7],stk:[1,2],need:[.5,.8],spd:1.25,zl:0,zh:0,mul:4,vm:.9,col:['#ab976a','#dccc9e','#f3ead0'],tip:['#5d4b3a','#1c140d'],lab:'どんだけ出るねん！！'},
+  giant:{n:'巨大',len:[4,8],r:[2.2,2.8],rate:[.6,.8],stk:[3,3],need:[.9,1.3],spd:.6,zl:.03,zh:-.03,mul:3,vm:.5,col:['#806c48','#bba673','#d8c69a'],tip:['#3a2e22','#0b0806'],lab:'デカッ！巨大角栓'}
+};
+function plugType(o,gold){
+  const rr=a=>a[0]+Math.random()*(a[1]-a[0]),q=Math.random(),k=q<.18?'soft':q<.56?'normal':q<.82?'hard':q<.94?'giant':'monster',T=PT[k];
+  o.type=k;o.T=T;o.len=rr(T.len);o.r=mm*rr(T.r);o.rate=rr(T.rate);o.curl=.3+Math.random()*.9;
+  const n=Math.floor(rr([T.stk[0],T.stk[1]+.999]));o.stucks=[];for(let i=0;i<n;i++)o.stucks.push((i+.3+Math.random()*.5)/(n+.5));
+  o.si=0;o.push=0;o.need=rr(T.need);o.th={soft:.2,normal:.3,hard:.42,giant:.46,monster:.3}[k];o.stk={soft:.2,normal:.24,hard:.32,giant:.34,monster:.26}[k];o.bn={soft:.2,normal:.45,hard:.85,giant:1.05,monster:.5}[k]+Math.random()*.4;
+  if(gold&&k!=='giant')o.len=14+Math.random()*7;else o.gold=false;
+}
+
+/* ---------- 音・メッセージ ---------- */
+function tone(f1,f2,dur,type='sine',vol=.25){
+  if(!ac)return;const o=ac.createOscillator(),g=ac.createGain(),t=ac.currentTime;
+  o.type=type;o.frequency.setValueAtTime(f1,t);o.frequency.exponentialRampToValueAtTime(f2,t+dur);
+  g.gain.setValueAtTime(vol,t);g.gain.exponentialRampToValueAtTime(.001,t+dur);o.connect(g).connect(ac.destination);o.start(t);o.stop(t+dur);
+}
+let squishT=0,creakT=0,nb=null,ts=1;const cam={x:0,y:0,z:1,sh:0};
+const toW=(sx,sy)=>[(sx-W/2)/cam.z+cam.x,(sy-H/2)/cam.z+cam.y];
+function noiseBuf(){if(nb||!ac)return nb;nb=ac.createBuffer(1,ac.sampleRate,ac.sampleRate);const d=nb.getChannelData(0);let b=0;for(let i=0;i<d.length;i++){b=b*.6+(Math.random()*2-1)*.4;d[i]=b*2}return nb}
+// 湿った音：帯域を絞ったノイズの粒
+function wet(f=600,q=6,dur=.09,vol=.2,slide=1){if(!ac)return;try{const t=ac.currentTime,s2=ac.createBufferSource();s2.buffer=noiseBuf();const bp=ac.createBiquadFilter();bp.type='bandpass';bp.frequency.setValueAtTime(f,t);bp.frequency.exponentialRampToValueAtTime(Math.max(40,f*slide),t+dur);bp.Q.value=q;const g=ac.createGain();g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(vol,t+.008);g.gain.exponentialRampToValueAtTime(.0001,t+dur);s2.connect(bp).connect(g).connect(ac.destination);s2.start(t,Math.random()*.6);s2.stop(t+dur+.03)}catch(e){}}
+function popS(k=1){wet(1600,1.4,.05,.3*k,.3);tone(170,60,.12,'sine',.38*k);setTimeout(()=>wet(520,7,.13,.18*k,.5),35)}
+function nyupon(){wet(380,5,.2,.28,2.4);tone(230,65,.2,'sine',.32);setTimeout(()=>{wet(900,4,.08,.2,.4);tone(120,50,.12,'sine',.22)},120)}
+function tearS(){wet(2600,1,.07,.3,.5);wet(800,3,.12,.22,.4)}
+function grainS(o,flow){wet(300+Math.random()*520+(o.prog||o.em||0)*260,4+Math.random()*6,.06+Math.random()*.07,.06+flow*.22,.55+Math.random()*.7)}
+// 拭く音：ノイズを流しっぱなしにして、手の速さで音量だけをなめらかに変える
+let sw=null;
+function swishStart(f){if(!ac)return;try{swishStop(true);const src=ac.createBufferSource();src.buffer=noiseBuf();src.loop=true;
+  const bp=ac.createBiquadFilter();bp.type='bandpass';bp.frequency.value=f;bp.Q.value=.6;const lp=ac.createBiquadFilter();lp.type='lowpass';lp.frequency.value=f*1.8;
+  const g=ac.createGain();g.gain.value=0;src.connect(bp).connect(lp).connect(g).connect(ac.destination);src.start();sw={src,g,bp,f,lx:null,ly:null,lt:0}}catch(e){}}
+function swishMove(sx,sy){if(!sw)return;const t=performance.now();if(sw.lx!==null){const v=Math.hypot(sx-sw.lx,sy-sw.ly)/Math.max(8,t-sw.lt);const k=Math.min(1,v/1.2);
+  sw.g.gain.setTargetAtTime(.015+k*.09,ac.currentTime,.06);sw.bp.frequency.setTargetAtTime(sw.f*(.85+k*.35),ac.currentTime,.08)}sw.lx=sx;sw.ly=sy;sw.lt=t}
+function swishStop(now){if(!sw)return;const s3=sw;sw=null;try{s3.g.gain.setTargetAtTime(0,ac.currentTime,now?.01:.07);s3.src.stop(ac.currentTime+(now?.05:.4))}catch(e){}}
+function buzz(p){try{navigator.vibrate&&navigator.vibrate(p)}catch(e){}}
+function msg(x,y,txt,c='#fff'){const n=performance.now();if(msgT[txt]&&n-msgT[txt]<700)return;msgT[txt]=n;floats.push({x,y,txt,c,t:0})}
+function burstFx(x,y,c,n=14){for(let i=0;i<n;i++)parts.push({x,y,vx:(Math.random()-.5)*170,vy:-60-Math.random()*170,t:0,c})}
+function add(pts,x,y,label,c){combo++;maxCombo=Math.max(maxCombo,combo);const v=Math.round(pts*(1+Math.min(combo,20)*.1));score+=v;msg(x,y,label+' +'+v,c);return v}
+function fail(o,x,y,txt,pts=0){procPen+=10;o.state='fail';o.t=0;combo=0;fails++;if(pts)score+=pts;msg(x,y,txt,'#ff8a80');tone(160,60,.25,'sawtooth',.18);if(held===o)held=null;if(grab&&grab.o===o)grab=null}
+function hurt(x,y,txt,path){procPen+=8;score=Math.max(0,score-80);combo=0;fails++;scars.push({path:path||[[x-8,y],[x+8,y]],t:0,beads:bead(path)});msg(x,y,txt+' -80','#ff8a80');tone(200,70,.3,'sawtooth',.2)}
+function bead(path){const b=[];if(!path)return b;for(let i=0;i<path.length;i+=6)if(Math.random()<.5)b.push([path[i][0],path[i][1],.8+Math.random()*1.4]);return b}
+
+/* ---------- 入力 ---------- */
+function scr(e){const b=cv.getBoundingClientRect();return[e.clientX-b.left,e.clientY-b.top]}
+function pos(e){const[a,b]=scr(e);return toW(a,b)}
+function pick(x,y){
+  let bo=null,bd=1e9;
+  for(const o of objs){if(o.state!=='idle')continue;const[a,b]=P(o);let d=Math.hypot(a-x,b-y),lim;
+    if(o.kind==='hair'){const L=(o.vis+o.root*o.prog)*mm;d=Math.min(d,Math.hypot(a+Math.cos(o.ang)*L-x,b+Math.sin(o.ang)*L-y));lim=Math.max(28,mm*5)}
+    else lim=o.kind==='cyst'?o.r*1.15:Math.max(28,o.r*3);
+    if(d<lim&&d<bd){bd=d;bo=o}}
+  return bo;
+}
+cv.addEventListener('contextmenu',e=>e.preventDefault());
+cv.addEventListener('pointerdown',e=>{pts2.set(e.pointerId,scr(e));if(pts2.size>=2){up();const[a,b]=[...pts2.values()];pinch={d:Math.hypot(a[0]-b[0],a[1]-b[1]),m:[(a[0]+b[0])/2,(a[1]+b[1])/2]};return}if(pinch||!e.isPrimary)return;
+  if(!running)return;e.preventDefault();cv.setPointerCapture?.(e.pointerId);
+  const[x,y]=pos(e);const[sx,sy]=scr(e);ptr={x,y,sx,sy,in:true};
+  if(tool==='tissue'){wiping=true;swishStart(1900);swishMove(sx,sy);wipeAt(x,y);return}
+  if(tool==='toner'){wiping=true;swishStart(950);swishMove(sx,sy);tonerAt(x,y);return}
+  if(tool==='oint'||tool==='band'||tool==='dis'){careTap(x,y);return}
+  if(tool==='ice'){iceOn=true;return}
+  if(tool==='milk'){wiping=true;swishStart(700);swishMove(sx,sy);milkAt(x,y);return}
+  if(tool==='scalpel'){stroke={pts:[[x,y]]};return}
+  let o=pick(x,y);if(lastF.o&&lastF.o.state==='idle'&&performance.now()-lastF.t<1800&&(tool==='finger'||tool==='pusher')){const[lx,ly]=P(lastF.o);if(Math.hypot(lx-x,ly-y)<mm*14)o=lastF.o}if(!o)return;const[ox,oy]=P(o);
+  if(tool==='finger'||tool==='pusher'){
+    if(o.kind==='hair'&&!o.ing)return msg(ox,oy-30,tool==='finger'?'指じゃつまめない':'押しても毛は出ない');
+    if(o.kind==='cyst'&&o.phase==='drained')return msg(ox,oy-o.r-10,'袋はピンセットで！');
+    if(o.kind==='zit')o.touched=true;
+    held=o;hold={d:0,time:o.p/.55,sx:x,sy:y};
+  }else if(tool==='tweez'){
+    if(o.kind==='zit'&&o.noTouch){o.touched=true;return fail(o,ox,oy-o.r-12,'赤ニキビをつまんで悪化…')}
+    let mode='pull',need,vmax,p0=o.prog;
+    if(o.kind==='hair'){if(o.ing){mode='dig';p0=o.em;need=mm*10;vmax=mm*70}else if(o.freed){need=(o.ingLen||mm*15)*1.3+30;vmax=mm*130}else{need=o.root*mm*3+30;vmax=mm*150}}
+    if(o.kind==='plug'){const forced=o.prog<.25;need=((1-o.prog)*o.len*mm*1.5+30)*(forced?1.4:1);vmax=mm*95*o.T.vm*(forced?.6:1);if(forced)mode='force'}
+    if(o.kind==='zit'){mode='core';need=mm*12;vmax=mm*(o.pop?70:50);if(o.phase==='closed')o.phase='open';o.touched=true}
+    if(o.kind==='cyst'){if(o.phase==='drained'){need=o.r*2.6;vmax=mm*(o.inc?60:42)}else{mode='contents';need=o.r*2.2;vmax=mm*45}}
+    grab={o,sx:x,sy:y,ssx:sx,ssy:sy,p0,need,vmax,lastD:0,raw:0,acc:0,mode};o.pull=[x,y];tone(900,1200,.04,'square',.05);
+  }
+});
+cv.addEventListener('pointermove',e=>{if(pts2.has(e.pointerId))pts2.set(e.pointerId,scr(e));if(pinch&&pts2.size>=2){const[a,b]=[...pts2.values()],d=Math.hypot(a[0]-b[0],a[1]-b[1]),m=[(a[0]+b[0])/2,(a[1]+b[1])/2];zoomAt(m[0],m[1],d/Math.max(1,pinch.d));cam.x-=(m[0]-pinch.m[0])/cam.z;cam.y-=(m[1]-pinch.m[1])/cam.z;clampCam();pinch={d,m};return}if(pinch||!e.isPrimary)return;
+  const[x,y]=pos(e);const[sx,sy]=scr(e);ptr={x,y,sx,sy,in:true};
+  if(wiping){swishMove(sx,sy);(tool==='toner'?tonerAt:tool==='milk'?milkAt:wipeAt)(x,y)}
+  if(stroke){stroke.pts.push([x,y]);if(stroke.pts.length%3===0)tone(2400,1800,.02,'square',.02)}
+  if(grab){const d=Math.hypot(sx-grab.ssx,sy-grab.ssy)/cam.z;if(d>grab.raw){grab.acc+=d-grab.raw;grab.raw=d}grab.o.pull=[x,y]}
+});
+const up=()=>{if(held)lastF={o:held,t:performance.now()};held=null;iceOn=false;if(wiping)swishStop();wiping=false;if(grab){grab.o.tension=0;grab=null}if(stroke){cut(stroke.pts);stroke=null}};
+const upP=e=>{pts2.delete(e.pointerId);if(pinch){if(pts2.size<2)pinch=pts2.size?pinch:null;if(!pts2.size)pinch=null;return}up()};cv.addEventListener('pointerup',upP);cv.addEventListener('pointercancel',upP);
+cv.addEventListener('pointerleave',()=>{ptr.in=false});
+
+function cut(pts){
+  let L=0;for(let i=1;i<pts.length;i++)L+=Math.hypot(pts[i][0]-pts[i-1][0],pts[i][1]-pts[i-1][1]);
+  if(L<14){const[px,py]=pts[0];for(const o of objs){if(o.state!=='idle'||o.kind!=='zit')continue;const[x,y]=P(o);if(Math.hypot(px-x,py-y)<Math.max(o.r*1.3,16)){
+    if(o.sub==='white'&&o.phase==='closed'){o.phase='open';add(40,x,y-o.r-12,'ちょんと開いた','#fff');tone(2200,1400,.05,'triangle',.1)}
+    else if(o.noTouch){o.touched=true;fail(o,x,y-o.r-12,'赤ニキビを刺して悪化…')}
+    else msg(x,y-o.r-12,/pus/.test(o.sub)?'黄ニキビはそのまま押せる':'もう開いてる');return}}return}
+  for(const o of objs){if(o.state!=='idle')continue;const[x,y]=P(o);
+    const near=pts.some(([a,b])=>Math.hypot(a-x,b-y)<(o.kind==='cyst'?o.r:o.kind==='hair'?mm*3:o.r*2.2));if(!near)continue;
+    if(o.kind!=='cyst')return hurt(x,y,o.kind==='hair'?'ひげごと切った！':o.kind==='zit'?'ニキビを切った！':'毛穴を切った！',pts);
+    if(o.phase!=='intact')return msg(x,y-o.r-10,'もう切開してある');
+    let Lin=0,dmin=1e9,ins=[];
+    for(let i=0;i<pts.length;i++){const[a,b]=pts[i],d=Math.hypot(a-x,b-y);dmin=Math.min(dmin,d);if(d<o.r){ins.push(pts[i]);if(i&&Math.hypot(pts[i-1][0]-x,pts[i-1][1]-y)<o.r)Lin+=Math.hypot(a-pts[i-1][0],b-pts[i-1][1])}}
+    if(dmin>o.r*.62||Lin<o.r*.8)return msg(x,y-o.r-10,'浅い！真ん中をしっかり');
+    const e0=ins[0],e1=ins[ins.length-1],closed=Math.hypot(e0[0]-e1[0],e0[1]-e1[1])<o.r*.55&&Lin>o.r*1.6;o.phase='cut';o.inc=ins.map(([a,b])=>[a-x,b-y]);o.p=0;o.prog=0;o.over=false;
+    for(let k=0,nb=Math.floor(Math.random()*5);k<nb;k++){const q=o.inc[Math.floor(Math.random()*o.inc.length)];o.blood.push([q[0],q[1],0,.7+Math.random()*.8])}
+    if(closed)add(220,x,y-o.r-14,'くり抜き切開','#fff');else if(L-Lin>o.r*1.6){scars.push({path:pts,t:0,beads:bead(pts)});add(60,x,y-o.r-14,'切りすぎ…','#ffd0c8')}else add(150,x,y-o.r-14,'きれいな切開','#fff');
+    tone(1800,600,.12,'triangle',.12);return;
+  }
+  const[a,b]=pts[pts.length>>1];hurt(a,b,'健康な肌を切った！',pts);
+}
+
+/* ---------- 成功処理 ---------- */
+function drain(o,x,y){o.phase='drained';o.prog=0;o.p=0;if(held===o)held=null;add(o.over?300:450,x,y-o.r-14,o.over?'ドロッ':'きれいに排出','#fff');tray('paste',o.r/mm,o.gold,false,o);burstFx(x,y,'#e9dfc2',18)}
+function snap(o,x,y){procPen+=5;
+  const g=grab;grab=null;o.tension=0;combo=0;st.tears++;tearS();cam.sh=.7;buzz([20,30,20]);
+  if(o.kind==='hair'){fail(o,x,y-30,g.mode==='dig'?'ちぎれて埋まったまま…':'ブチッ…毛根が残った');return}
+  if(o.kind==='plug'){const l=o.len*o.prog,rest=o.len-l;if(l>.6)tray('plug',l,o.gold,true,o);
+    if(rest<.8){o.over=true;finish(o);return}
+    o.len=rest;o.prog=0;o.si=0;o.stucks=o.stucks.length?[.4]:[];o.dmg=(o.dmg||0)+.2;o.over=true;o.th+=.05;msg(x,y-24,'ブチッ！途中でちぎれた…残りがまだ中に','#ffb3a8');return}
+  if(o.kind==='zit'){tray('zit',o.r/mm*.5,o.gold,true,o);o.prog=Math.max(.3,o.prog*.6);o.dmg=(o.dmg||0)+.25;o.over=true;msg(x,y-o.r-12,'芯がちぎれた…','#ffb3a8');return}
+  if(o.phase==='drained'){o.state='fail';o.t=0;fails++;score+=100;tray('sac',o.r/mm,o.gold,true,o);msg(x,y-o.r-14,'袋が破れた…再発するかも +100','#ffb3a8');return}
+  tray('paste',o.r/mm*.5,o.gold,true,o);o.prog*=.7;o.dmg=(o.dmg||0)+.2;o.over=true;msg(x,y-o.r-14,'ブチッ…中身がちぎれた','#ffb3a8');
+}
+function finish(o){recLen(o);
+  const[x,y]=P(o);o.state='done';o.t=0;if(held===o)held=null;if(grab&&grab.o===o)grab=null;wins++;addTotal(stage);
+  if(o.kind==='plug'){add(o.len*10*o.T.mul*(o.gold?2:1)*(o.over?1:1.5),x,y-o.len*mm-10,(o.over?'':'パーフェクト ')+o.T.lab,o.gold?'#ffd54a':'#fff');tray('plug',o.len,o.gold,false,o);burstFx(x,y,o.gold?'#ffd54a':'#fff6dc')}
+  if(o.kind==='hair'){add(o.len*14*(o.gold?2:1)*(o.freed?1.5:1),x,y-30,o.freed?'埋没毛スッキリ':'毛根までスルッ',o.gold?'#ffd54a':'#fff');tray('hair',o.len,o.gold,false,o);burstFx(x,y,'#fff',8)}
+  if(o.kind==='zit'&&o.coreL){deb.push({kind:'core',len:o.coreL/mm,gold:false,o,x0:x,y0:y,x:x+(Math.random()-.5)*mm*6,y:y-mm*5-Math.random()*mm*3,a:-Math.PI/2+(Math.random()-.5),t:0});jumpFx(x,y)}
+  if(o.kind==='zit'){add((/pus/.test(o.sub)?260:180)*(o.over?1:1.4)*(o.gold?2:1),x,y-o.r-14,/pus/.test(o.sub)?'芯まで出た！':'スッキリ',o.gold?'#ffd54a':'#fff');(o.sub==='black'?tray('plug',o.len,o.gold,false,o):tray('zit',o.r/mm,o.gold,false,o));burstFx(x,y,'#f3e2a0',8)}
+  if(o.kind==='cyst'){setTimeout(()=>msg(x,y+o.r+20,'摘出成功！傷口のケア：拭く→消毒→軟膏→絆創膏','#e9fffb'),700);add(700*(o.gold?2:1),x,y-o.r-14,'完全摘出！','#ffd54a');tray('sac',o.r/mm,o.gold,false,o);burstFx(x,y,'#ffd54a',24)}
+  if(o.kind==='plug'){st.longest=Math.max(st.longest,o.len);if(o.type==='monster')st.monster=(st.monster||0)+1;if(o.type==='giant')st.giant++;if(o.type==='hard')st.hard++}if(o.kind==='cyst')st.cyst++;if(o.freed)st.ingrown++;if(!o.over)st.perfect++;
+  nyupon();o.jig=1;ts=.3;cam.sh=Math.max(cam.sh,.5);buzz(50);
+}
+
+/* ---------- 更新 ---------- */
+function clap(){wet(3600,.7,.05,.55,.6);wet(1400,2,.07,.35,.5);tone(1900,1300,.05,'square',.12);tone(140,60,.1,'sine',.3);buzz(30)}
+function update(dt){
+  if(cd>0){cd-=dt;const stg=cd>1.6?0:cd>.8?1:2;if(stg!==cdStage){cdStage=stg;if(stg<2)tone(880,880,.13,'sine',.22);else clap()}if(cd<=0){cd=0;running=true}}
+  for(const o of objs){
+    o.t+=dt;o.surge=Math.max(0,(o.surge||0)-dt*2.2);o.jig=(o.jig||0)*Math.exp(-dt*3.2);if(o.blood)for(const b of o.blood)b[2]=Math.min(1,b[2]+dt*.6);
+    if(o.state!=='idle'&&!o.tg&&o.state==='done'&&o.kind!=='cyst'&&tightOf(o)>=.6){o.tg=1;score+=10;const[tx,ty]=P(o);msg(tx,ty-20,'毛穴キュッ +10','#e9fffb')}
+    if(o.state!=='idle'){if(o.bmax===undefined){const ch=o.state==='fail'?.6:{cyst:.85,zit:.5,hair:o.freed?.5:.22,plug:o.over?.4:.12}[o.kind];o.bmax=Math.random()<ch?.25+Math.random()*.75:0;if(o.bmax)st.blood++;o.bdel=Math.random()*2.5;o.bsp=.08+Math.random()*.25}
+      if(!o.wiped&&o.t>o.bdel)o.bleed=Math.min(o.bmax,(o.bleed||0)+dt*o.bsp);continue}const[x,y]=P(o);
+    const pressing=held===o&&PRESS[tool];
+    const ingP=o.kind==='hair'&&o.ing;o.stuck0=o.stuck;o.stuck=false;
+    if(o.kind==='plug'||ingP||o.kind==='zit'||o.kind==='cyst'&&o.phase!=='drained'){
+      // 力＝押してから指を動かした距離＋じわじわ沈み込む分。肌はすこし遅れてついてくる
+      const pu=tool==='pusher'&&pressing,hardIn=o.kind==='cyst'&&o.phase==='intact'||o.kind==='zit'&&o.phase==='closed',th=(o.th??.3)-(pu?.05:0)+(hardIn?.15:0),dth=pu?.84:.78;
+      if(pressing){hold.time+=dt;const tg=Math.min(1.15,hold.time*(pu?.6:.55));o.p+=(tg-o.p)*Math.min(1,dt*6)}
+      else o.p=Math.max(0,o.p-dt*1.6);
+      const redZ=o.kind==='zit'&&o.noTouch;
+      if(pressing)o.dmg=(o.dmg||0)+Math.max(0,o.p-dth)*dt*(o.kind==='zit'?7:4.5)+dt*.012+(redZ?o.p*dt*1.4:0);else o.dmg=Math.max(0,(o.dmg||0)-dt*.08);
+      if(o.dmg>.45&&!o.over){o.over=true;procPen+=3}
+      if(redZ&&pressing)msg(x,y-o.r-12,'赤ニキビは押すと悪化…触らないで','#ffb3a8');
+      if(o.dmg>=1){if(o.kind==='plug'){const l=o.len*o.prog;if(l>.8)tray('plug',l,o.gold,true,o);fail(o,x,y-24,'イタッ！ ちぎれた',Math.round(l*4))}
+        else if(ingP)fail(o,x,y-30,'押しすぎて腫れた…');
+        else if(o.kind==='zit')fail(o,x,y-o.r-12,redZ?'つぶして悪化…跡が残りそう':'つぶしすぎて出血…');
+        else fail(o,x,y-o.r-10,o.phase==='intact'?'切開せずに押して炎症…':'押しすぎて炎症…');continue}
+      const flow=Math.min(.38,Math.max(0,o.p-th));
+      if(!pressing)o.trem=Math.max(0,(o.trem||0)-dt*2);
+      if(flow>0&&pressing&&!(o.kind==='zit'&&o.noTouch)&&(o.br||0)<o.bn){
+        o.br=(o.br||0)+dt*(.5+flow*2.2);o.trem=o.br/o.bn;
+        creakT-=dt;if(creakT<=0){creakT=.2;wet(130+o.p*140,3,.24,.03+o.p*.07,.8)}
+        if(o.br>=o.bn){o.trem=0;o.surge=1;o.jig=1;cam.sh=Math.max(cam.sh,.6);popS(.7);buzz(25);if(o.kind==='zit'&&o.phase==='closed')o.phase='open'}
+        continue}
+      if(flow>0&&pressing){
+        if(o.kind==='zit'){
+          if(redZ)continue;
+          if(o.phase==='closed'){o.phase='open';msg(x,y-o.r-12,'押しつぶして破れた','#ffe7a3');o.dmg=(o.dmg||0)+.12}
+          const ph=Math.sin(o.t*9);o.prog+=flow*dt*(/pus/.test(o.sub)?1.1:1.4)*(1+(o.surge||0)*3)*(.35+1.3*Math.max(0,ph));
+          if(ph>.85&&!o.pk&&o.pop){o.pk=1;wet(260+Math.random()*180,6,.13,.12+flow*.25,.55);tone(110,70,.08,'sine',.08)}if(ph<.3)o.pk=0;
+          if(!o.pop&&o.prog>=.3){o.pop=true;msg(x,y-o.r-12,'プチッ','#fff');if(/pus/.test(o.sub)){st.pus++;st.squirt++;squirt(o,x,y)}if(o.sub==='bigpus')st.bigpus=(st.bigpus||0)+1;popS(1);o.surge=1;o.jig=1;cam.sh=1;buzz(40)}
+          squishT-=dt;if(squishT<=0){squishT=.05+Math.random()*.08;grainS(o,flow)}
+          if(o.prog>=1)finish(o);continue}
+        if(ingP){o.em+=flow*dt*1.1*(1+(o.surge||0)*3);squishT-=dt;if(squishT<=0){squishT=.05+Math.random()*.08;grainS(o,flow)}
+          if(o.em>=1){o.ing=false;o.freed=true;o.p=0;held=null;o.vis=1.4;o.len=o.vis+o.root;add(60,x,y-30,'ループが出た','#fff');tone(500,900,.08,'triangle',.15)}continue}
+        const sk=o.stucks?o.stucks[o.si]:undefined;
+        if(sk!==undefined&&o.prog>=sk){
+          o.prog=sk;o.stuck=true;
+          msg(x,y-o.len*mm*o.prog-o.r*3-12,'引っかかってる…もう少し強く','#ffe7a3');
+          if(o.p>=th+o.stk){o.si++;o.prog=Math.min(.99,o.prog+.07);msg(x,y-o.len*mm*o.prog-10,'ポコッ','#fff');st.pops++;popS(.8);o.surge=1;o.jig=1;cam.sh=Math.max(cam.sh,.8);buzz(30);burstFx(x,y,'#f3ead0',5)}
+        }else{o.prog+=flow*dt*2.2*(1+(o.surge||0)*3)*(o.T?o.T.spd:1)/(o.kind==='cyst'?(o.phase==='intact'?4.5:2.4):.5+(o.type==='monster'?(28+o.len*.12)*1.6:o.len)*.09);if(o.type==='monster'){const m=Math.floor(o.prog*4);if(m>(o.ms||0)&&m<4){o.ms=m;msg(x,y-mm*14,['まだ出る…！','え、まだ？','どんだけ出るねん！'][m-1],'#fff');cam.sh=Math.max(cam.sh,.3)}}}
+        squishT-=dt;if(squishT<=0){squishT=.05+Math.random()*.08;grainS(o,flow)}
+        if(o.prog>=1){if(o.kind==='plug')finish(o);else drain(o,x,y)}
+      }
+    }
+    if(grab&&grab.o===o){
+      const sp=grab.acc/Math.max(dt,.001);grab.acc=0;
+      o.tension+=(sp/grab.vmax-o.tension)*Math.min(1,dt*22);
+      grab.lastD=Math.min(grab.raw,grab.lastD+grab.vmax*1.3*dt);{const v=Math.min(1,grab.p0+(1-grab.p0)*grab.lastD/grab.need);if(grab.mode==='dig')o.em=v;else o.prog=v}
+      if(grab.mode!=='pull')o.dmg=(o.dmg||0)+dt*.1*(.3+o.tension);
+      if(o.dmg>=1){fail(o,x,y-30,'無理やりすぎて炎症…');continue}
+      if(o.tension>1||o.tension>.5&&Math.random()<(o.tension-.5)*dt*o.brit*2.2){snap(o,x,y);continue}
+      if(grab.mode==='dig'){if(o.em>=1){o.ing=false;o.freed=true;o.vis=1.4;o.len=o.vis+o.root;o.prog=0;grab=null;add(60,x,y-30,'掘り出した！もう一度つまんで抜く','#fff')}}
+      else if(o.prog>=1){if(grab.mode==='contents'){grab=null;drain(o,x,y)}else finish(o)}
+    }else o.tension=Math.max(0,o.tension-dt*3);
+  }
+  for(const d of deb)d.t+=dt;
+  if(running){recT+=dt;time-=dt;if(time<=10&&!warned){warned=true;msg(W/2,H*.3,'残り10秒！キレイに仕上げよう','#ffe7a3')}if(time<=0){time=0;complete();return}if(!allDone&&!objs.some(o=>o.state==='idle'&&!(o.kind==='zit'&&o.noTouch))){allDone=true;msg(W/2,H*.4,'全部抜けた！残り時間でキレイに仕上げよう','#fff');tone(523,784,.2,'triangle',.15)}}
+  sheen=sheen.filter(q=>(q.t+=dt)<(q.life||3));
+  parts=parts.filter(q=>(q.t+=dt)<.8);for(const q of parts){q.x+=q.vx*dt;q.y+=q.vy*dt;q.vy+=420*dt}
+  floats=floats.filter(f=>(f.t+=dt)<(f.big?1.6:1.3));
+  {const hb=!running||ending;if($('btnBye').hidden!==hb)$('btnBye').hidden=hb}
+  meter();camera(dt);iceTick(dt);for(const o of objs)if(o.state!=='idle'){o.foamT=(o.foamT||0)+dt;o.cold=Math.max(0,(o.cold||0)-dt*.15)}
+  $('hLeft').textContent=running?objs.filter(o=>o.state==='idle'&&!(o.kind==='zit'&&o.noTouch)).length:'—';$('hScore').textContent=running?cleanState().c:'—';$('hTime').textContent=running?Math.ceil(time):'—';
+}
+let zAnim=null;const pts2=new Map();let pinch=null;
+function clampCam(){cam.z=Math.min(3.5,Math.max(1,cam.z));const hw=W/2/cam.z,hh=H/2/cam.z;cam.x=Math.min(W-hw,Math.max(hw,cam.x));cam.y=Math.min(H-hh,Math.max(hh,cam.y))}
+function zoomAt(sx,sy,f){const[wx,wy]=toW(sx,sy);cam.z=Math.min(3.5,Math.max(1,cam.z*f));cam.x=wx-(sx-W/2)/cam.z;cam.y=wy-(sy-H/2)/cam.z;zAnim=null;clampCam()}
+function zoomBtn(f){const z=Math.min(3.5,Math.max(1,(zAnim?zAnim.z:cam.z)*f));zAnim={z,x:cam.x,y:cam.y};if(z===1){zAnim.x=W/2;zAnim.y=H/2}}
+cv.addEventListener('wheel',e=>{e.preventDefault();const b=cv.getBoundingClientRect();zoomAt(e.clientX-b.left,e.clientY-b.top,Math.exp(-e.deltaY*.0015))},{passive:false});
+function camera(dt){
+  if(!cam.x){cam.x=W/2;cam.y=H/2}
+  if(zAnim){const k=1-Math.exp(-dt*10);cam.z+=(zAnim.z-cam.z)*k;cam.x+=(zAnim.x-cam.x)*k;cam.y+=(zAnim.y-cam.y)*k;if(Math.abs(zAnim.z-cam.z)<.003)zAnim=null}
+  const hw=W/2/cam.z,hh=H/2/cam.z;cam.x=Math.min(W-hw,Math.max(hw,cam.x));cam.y=Math.min(H-hh,Math.max(hh,cam.y));cam.sh=Math.max(0,cam.sh-dt*3);
+}
+function meter(){
+  const f=$('fill'),z=$('zone');
+  if(grab){const v=Math.min(1,grab.o.tension);$('mName').textContent='張力';z.style.display='none';f.style.width=v*100+'%';f.classList.toggle('over',v>.8);$('mLabel').textContent=v>.8?'速すぎ！':v>.15?'いい感じ':'引いて';return}
+  const a=held||objs.find(o=>o.state==='idle'&&o.p>0);z.style.left=((tool==='pusher'?.84:.78)/1.15*100)+'%';z.style.display=grab?'none':'block';
+  $('mName').textContent='圧力';const v=a?Math.min(1,a.p/1.15):0,dm=a?a.dmg||0:0;f.style.width=v*100+'%';f.classList.toggle('over',dm>.45);
+  $('mLabel').textContent=!a?'—':dm>.75?'肌が限界…':dm>.45?'赤くなってきた':a.stuck?'ググッ…':a.p>(a.th??.3)?'ニュル…':'もっと強く';
+}
+
+/* ---------- 描画ヘルパー ---------- */
+function rg(x0,y0,r0,x1,y1,r1,stops){const g=ctx.createRadialGradient(x0,y0,r0,x1,y1,r1);for(const[s,c]of stops)g.addColorStop(s,c);return g}
+function disc(x,y,r,fill){ctx.fillStyle=fill;ctx.beginPath();ctx.arc(x,y,Math.max(.1,r),0,7);ctx.fill()}
+// 押されて盛り上がる肌：上左にハイライト、下右に影、中心は圧迫で白っぽく、外周は赤み
+function mound(x,y,R,a,blanch=true){
+  if(a<=0)return;
+  disc(x,y,R*1.5,rg(x,y,R*.6,x,y,R*1.5,[[0,`rgba(215,80,70,${.22*a})`],[1,'rgba(215,80,70,0)']]));
+  disc(x,y,R,rg(x-R*.35,y-R*.4,0,x,y,R,[[0,`rgba(255,246,236,${.6*a})`],[.5,`rgba(255,225,205,${.12*a})`],[.82,`rgba(110,45,35,${.16*a})`],[1,'rgba(110,45,35,0)']]));
+  if(blanch)disc(x,y,R*.42,rg(x,y,0,x,y,R*.42,[[0,`rgba(255,238,210,${.45*a})`],[1,'rgba(255,238,210,0)']]));
+}
+function blob(x,y,r,seed,j=.15){ctx.beginPath();for(let k=0;k<=24;k++){const t=k/24*6.283,rr=r*(1+j*Math.sin(t*3+seed)+j*.6*Math.sin(t*5+seed*2));k?ctx.lineTo(x+Math.cos(t)*rr,y+Math.sin(t)*rr*.9):ctx.moveTo(x+Math.cos(t)*rr,y+Math.sin(t)*rr*.9)}ctx.closePath()}
+function path(pts){ctx.beginPath();pts.forEach(([a,b],i)=>i?ctx.lineTo(a,b):ctx.moveTo(a,b))}
+function offset(pts,d){return pts.map((p,i)=>{const q=pts[Math.min(pts.length-1,i+1)],r=pts[Math.max(0,i-1)];let dx=q[0]-r[0],dy=q[1]-r[1];const l=Math.hypot(dx,dy)||1;let nx=-dy/l,ny=dx/l;if(nx+ny>0){nx=-nx;ny=-ny}return[p[0]+nx*d,p[1]+ny*d]})}
+function curve(x,y,dir,L,n,wig,o){const out=[];for(let i=0;i<=n;i++){const k=i/n,s=Math.sin(k*3+o.t*2.2+o.seed)*wig*k;out.push([x+dir[0]*L*k-dir[1]*s,y+dir[1]*L*k+dir[0]*s])}return out}
+const CORE={soft:1,col:['#b99a5c','#e9d39a','#fffaf0'],tip:['#fffdf6','#efe0b6']},PUS={soft:1,col:['#c39a48','#efd07c','#fff5d0'],tip:['#fffaf0','#e8d39a']},WHT={soft:1,col:['#c6b994','#ebe3cc','#fffdf5'],tip:['#fffdf6','#e3dac2']};
+const KER={soft:1,col:['#a8987a','#ddd2b6','#f7f1e2'],tip:['#e3d8bb','#c3b28a']};
+function coilPath(x,y,L,up,rad,sg,o){const pts=[[x,y]],step=2.4,n=Math.max(4,Math.ceil(L/step));let a=-Math.PI/2+Math.sin(o.seed)*.4,px=x,py=y;
+  for(let i=1;i<=n;i++){const s2=i*step;a+=s2>up?sg*step/rad*(1+Math.sin(s2*.08)*.25):Math.sin(s2*.2+o.t*1.2+o.seed)*.03;px+=Math.cos(a)*step;py+=Math.sin(a)*step;pts.push([px,py])}return pts}
+function plugPath(o,x,y,L){
+  const pts=[[x,y]],step=2.2,n=Math.max(4,Math.ceil(L/step)),up=mm*(2.5+o.len*.15),sg=o.seed>4.5?1:-1;let a=-Math.PI/2+Math.sin(o.seed)*.35,px=x,py=y;
+  for(let i=1;i<=n;i++){const s2=i*step;a+=s2>up?sg*step/(mm*(1.6+o.curl*1.2)*(1+(s2-up)/(mm*22))):Math.sin(s2*.15+o.t*1.4+o.seed)*.025;px+=Math.cos(a)*step;py+=Math.sin(a)*step;pts.push([px,py])}
+  return pts;
+}
+function dirTo(o,x,y,def){if(o.pull&&grab&&grab.o===o){const dx=o.pull[0]-x,dy=o.pull[1]-y,d=Math.hypot(dx,dy);if(d>4)return[dx/d,dy/d]}return def}
+// 皮脂のかたまり（半透明でワックス状、先端は酸化して黒い）
+function sebum(pts,w,gold,alpha,T){
+  const C=gold?['#9c7f3e','#dcc171','#fbeec0']:T.col,TP=T.tip,n=pts.length;
+  const rad=i=>{const k=i/(n-1);return w*.5*(.84+.1*Math.sin(k*9+n)+.06*Math.sin(k*27+n*.7))*(k<.1?.82+k*1.8:1)*(k>.86?1.06:1)};
+  ctx.save();ctx.globalAlpha=alpha;
+  for(let i=0;i<n;i+=2){const[a,b]=pts[i];disc(a+w*.3,b+w*.5,rad(i)*1.15,'rgba(70,28,14,.09)')}
+  ctx.lineCap='round';ctx.lineJoin='round';
+  const layer=(col,f,off)=>{ctx.strokeStyle=col;const q=off?offset(pts,off):pts;for(let i=0;i<n-1;i++){ctx.lineWidth=Math.max(.6,(rad(i)+rad(i+1))*f);ctx.beginPath();ctx.moveTo(q[i][0],q[i][1]);ctx.lineTo(q[i+1][0],q[i+1][1]);ctx.stroke()}};
+  layer(C[0],1,0);layer(C[1],.8,w*.04);layer(C[2],.52,w*.1);layer('rgba(255,253,242,.35)',.3,w*.16);
+  // 濡れたツヤ
+  path(offset(pts.slice(1,-2),w*.22));ctx.strokeStyle='rgba(255,255,250,.55)';ctx.lineWidth=Math.max(.8,w*.1);ctx.stroke();
+  for(let i=3;i<n-3;i+=5){const[a,b]=pts[i];disc(a-w*.18,b-w*.2,w*.07,'rgba(255,255,255,.85)')}
+  // 酸化した先端（ザラっとした黒い頭）
+  const[tx,ty]=pts[n-1],tr=w*.56;
+  ctx.fillStyle=rg(tx-tr*.35,ty-tr*.4,0,tx,ty,tr*1.1,[[0,TP[0]],[.55,TP[1]],[1,TP[1]]]);blob(tx,ty,tr,n,.13);ctx.fill();
+  if(!T.soft)for(let k=0;k<7;k++){const a=k*2.4+n,rr=tr*.55*((k*37%10)/10);disc(tx+Math.cos(a)*rr,ty+Math.sin(a)*rr,tr*.12,k%2?'rgba(140,115,85,.45)':'rgba(10,6,4,.5)')}
+  disc(tx-tr*.32,ty-tr*.36,tr*.14,'rgba(255,255,255,.7)');
+  ctx.restore();
+}
+function ring(){return;
+  const st=-Math.PI/2;ctx.lineWidth=5;ctx.lineCap='butt';
+  ctx.strokeStyle='rgba(0,0,0,.2)';ctx.beginPath();ctx.arc(x,y,R,0,7);ctx.stroke();
+  ctx.strokeStyle='rgba(255,255,255,.6)';ctx.beginPath();ctx.arc(x,y,R,st+lo*6.283,st+hi*6.283);ctx.stroke();
+  ctx.strokeStyle=p>hi?'#ff3b30':p>=lo?'#13b5a0':'#fff';ctx.lineWidth=3;ctx.beginPath();ctx.arc(x,y,R,st,st+Math.min(1,p)*6.283);ctx.stroke();
+}
+function goldHalo(x,y,R,t){ctx.strokeStyle=`rgba(255,210,60,${.45+.3*Math.sin(t*5)})`;ctx.lineWidth=2;ctx.setLineDash([4,5]);ctx.beginPath();ctx.arc(x,y,R,0,7);ctx.stroke();ctx.setLineDash([])}
+
+/* ---------- 対象の描画 ---------- */
+function drawPlug(o,x,y,fly,fa,pr){
+  const r=o.r*(1+(o.prog===0?(o.trem||0)*.22:0))*(1+Math.min(1,o.p)*.3),lo=pr.lo+o.T.zl,hi=pr.hi+o.T.zh,sh=o.stuck||o.trem>0?Math.sin(o.t*70)*(o.stuck?1.2:o.trem*1.4):0;x+=sh;
+  mound(x,y,r*(1.6+o.p*.9),Math.min(1,o.p*.8+(o.stuck?.25:0)),false);
+  if(o.stuck)disc(x,y,r*2.4,rg(x,y,0,x,y,r*2.4,[[0,`rgba(255,245,225,${.25+o.push/o.need*.35})`],[1,'rgba(255,245,225,0)']]));
+  if(o.gold&&!fly)goldHalo(x,y,r*2.6,o.t);
+  // 毛穴のくぼみ
+  disc(x,y,r*1.7,rg(x+r*.2,y+r*.25,r*.4,x,y,r*1.7,[[0,'rgba(80,35,22,.5)'],[1,'rgba(80,35,22,0)']]));
+  ctx.strokeStyle='rgba(255,232,215,.4)';ctx.lineWidth=1.2;ctx.beginPath();ctx.arc(x,y,r*1.08,-.1,1.9);ctx.stroke();
+  // 酸化した角栓の頭
+  if(o.prog<.05||fly){ctx.fillStyle=rg(x-r*.3,y-r*.3,0,x,y,r,[[0,o.T.tip[0]],[.55,o.T.tip[1]],[1,o.T.tip[1]]]);blob(x,y,r*.95,o.seed,.08);ctx.fill();for(let k=0;k<6;k++){const a=k*2.3+o.seed,rr=r*.55*((k*37%10)/10);disc(x+Math.cos(a)*rr,y+Math.sin(a)*rr,r*.13,k%2?'rgba(150,120,90,.4)':'rgba(8,5,3,.5)')}disc(x-r*.32,y-r*.3,r*.15,'rgba(255,255,255,.6)')}
+  else{ctx.fillStyle='#4a3324';blob(x,y,r*.9,o.seed,.06);ctx.fill()}
+  if(o.prog>0){const L=o.len*mm*o.prog,pts=grab&&grab.o===o?curve(x,y,dirTo(o,x,y,[0,-1]),L,Math.max(6,Math.ceil(L/1.3)),r*.6*o.curl,o):plugPath(o,x,y,L);o.lastPts=pts.map(([a,b])=>[a-x,b-y]);sebum(pts,Math.max(4.5,r*1.55),o.gold,1,o.T)}
+  if(!fly&&o.p>0)ring(x,y,Math.max(r*3,24),o.p,lo,hi);
+}
+function drawHair(o,x,y,fly,fa,pr){
+  const d=dirTo(o,x,y,[Math.cos(o.ang),Math.sin(o.ang)]),w=o.r*2;
+  if(o.ing){
+    const R=mm*3.4,pts=ingPts(o,x,y);
+    disc(x,y,R*1.6,rg(x,y,0,x,y,R*1.6,[[0,`rgba(212,78,68,${.3+o.p*.25})`],[1,'rgba(212,78,68,0)']]));
+    mound(x,y,R,.4+o.p*.5);
+    // 皮膚越しに透ける毛：ぼやけて青灰色
+    ctx.save();ctx.lineCap='round';ctx.lineJoin='round';ctx.filter='blur(1.2px)';path(pts);ctx.strokeStyle='rgba(62,64,84,.45)';ctx.lineWidth=w*1.9;ctx.stroke();ctx.filter='none';
+    path(pts);ctx.strokeStyle='rgba(38,34,44,.32)';ctx.lineWidth=w*.75;ctx.stroke();ctx.restore();
+    // 押し出されて持ち上がったループ
+    if(o.em>0){const k=Math.max(2,Math.round(o.em*15)),sub=pts.slice(1,1+k).map(([a,b],i)=>{const lf=Math.sin(i/(k-1)*Math.PI)*mm*1.1*o.em;return[a-lf*.45,b-lf]});
+      ctx.save();ctx.lineCap='round';ctx.shadowColor='rgba(40,15,10,.5)';ctx.shadowBlur=3;ctx.shadowOffsetX=2;ctx.shadowOffsetY=4;path(sub);ctx.strokeStyle='#17110f';ctx.lineWidth=w;ctx.stroke();ctx.restore();
+      path(offset(sub,w*.25));ctx.strokeStyle='rgba(165,150,140,.55)';ctx.lineWidth=Math.max(.5,w*.25);ctx.stroke()}
+    // 毛穴の出口の小さな白い膿
+    disc(x,y,mm*.8,rg(x-mm*.22,y-mm*.26,0,x,y,mm*.8,[[0,'rgba(255,252,236,.9)'],[.65,'rgba(245,222,168,.55)'],[1,'rgba(240,200,150,0)']]));
+    disc(x-mm*.25,y-mm*.28,mm*.16,'rgba(255,255,255,.8)');
+    if(o.gold)goldHalo(x,y,mm*4.5,o.t);
+    if(o.p>0)ring(x,y,R*1.5,o.p,pr.lo,pr.hi);
+    return;
+  }
+  if(o.freed){drawFreed(o,x,y,w);return}
+  if(!fly&&o.tension>0)mound(x+d[0]*mm*.8,y+d[1]*mm*.8,mm*3.2,Math.min(1,o.tension+o.prog*.5),false);
+  // 皮膚の下の毛（青っぽく透ける）
+  if(!fly&&o.prog<1){const ul=o.root*mm*.75*(1-o.prog);ctx.strokeStyle='rgba(70,75,95,.38)';ctx.lineWidth=w*1.3;ctx.lineCap='round';ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(x-Math.cos(o.ang)*ul,y-Math.sin(o.ang)*ul);ctx.stroke()}
+  disc(x,y,w*1.3,rg(x+w*.3,y+w*.3,0,x,y,w*1.3,[[0,'rgba(70,35,25,.55)'],[1,'rgba(70,35,25,0)']]));
+  const by=y-fly*130,L=(o.vis+o.root*(fly?1:o.prog))*mm,rootL=o.root*mm*(fly?1:o.prog),tx=x+d[0]*L,ty=by+d[1]*L;
+  ctx.save();ctx.globalAlpha=fa;ctx.lineCap='round';
+  if(rootL>1){const n=Math.ceil(rootL*.6/2);for(let k=0;k<=n;k++){const t=k/n,px=x+d[0]*rootL*.6*t,py=by+d[1]*rootL*.6*t,rr=w*(1.25-.45*t);disc(px,py,rr,rg(px-rr*.4,py-rr*.4,0,px,py,rr,[[0,'rgba(255,255,252,.7)'],[.7,'rgba(240,232,215,.45)'],[1,'rgba(220,205,185,.2)']]))}}
+  ctx.save();ctx.shadowColor='rgba(40,15,10,.45)';ctx.shadowBlur=3;ctx.shadowOffsetX=2;ctx.shadowOffsetY=3;
+  const hp=[];for(let i=0;i<=16;i++){const k=i/16,q=Math.sin(k*(o.freed?8:2)+o.seed)*(o.freed?mm*1.1:mm*.1)*Math.min(1,k*3);hp.push([x+d[0]*L*k-d[1]*q,by+d[1]*L*k+d[0]*q])}
+  ctx.strokeStyle='#1b1512';ctx.lineWidth=w;path(hp);ctx.stroke();ctx.restore();
+  path(offset(hp,w*.25));ctx.strokeStyle='rgba(140,125,115,.6)';ctx.lineWidth=Math.max(.6,w*.25);ctx.stroke();
+  ctx.fillStyle='#2a201c';ctx.beginPath();ctx.arc(hp[16][0],hp[16][1],w*.45,0,7);ctx.fill();
+  if(o.prog>.85||fly){const a=Math.atan2(d[1],d[0])+Math.PI/2;ctx.fillStyle=rg(x-w*.4,by-w*.4,0,x,by,w*1.8,[[0,'rgba(255,255,250,.95)'],[1,'rgba(225,212,195,.8)']]);ctx.beginPath();ctx.ellipse(x,by,w*1.1,w*1.7,a,0,7);ctx.fill()}
+  ctx.restore();
+  if(o.gold&&!fly)goldHalo(x,y,mm*3.4,o.t);
+}
+function drawCyst(o,x,y,fly,fa,pr){
+  const r=o.r*(o.phase==='drained'?.72:1-o.prog*.28)*(1+o.p*.07),a=o.phase==='drained'?.45:1-o.prog*.4;
+  ctx.save();ctx.globalAlpha=fa;
+  // 周りの赤み・ドーム（肌のキメを残すため半透明で重ねる）
+  disc(x,y,r*1.6,rg(x,y,r*.7,x,y,r*1.6,[[0,`rgba(215,95,80,${.22+o.p*.25})`],[1,'rgba(215,95,80,0)']]));
+  disc(x+r*.12,y+r*.18,r*1.05,rg(x+r*.12,y+r*.18,r*.6,x+r*.12,y+r*.18,r*1.05,[[0,'rgba(90,35,25,.28)'],[1,'rgba(90,35,25,0)']]));
+  disc(x,y,r,rg(x-r*.4,y-r*.45,0,x,y,r,[[0,`rgba(255,248,238,${.55*a})`],[.35,`rgba(255,222,190,${.25*a})`],[.72,`rgba(225,150,120,${.16*a})`],[.9,`rgba(150,70,55,${.14*a})`],[1,'rgba(150,70,55,0)']]));
+  disc(x,y,r*.55,rg(x,y,0,x,y,r*.55,[[0,`rgba(245,222,160,${(.22+o.p*.2)*a})`],[1,'rgba(245,222,160,0)']]));
+  // へそ（開口部）
+  ctx.fillStyle=rg(x-1,y-1,0,x,y,mm*.8,[[0,'#5a4436'],[1,'#20160f']]);blob(x,y,mm*.7,o.seed,.2);ctx.fill();
+  if(o.inc)wound(x,y,o.inc,o.phase==='intact'?0:o.phase==='cut'?1+o.prog*1.5:2.5,o.blood);
+
+  // 中身（チーズ状の角質）がもりもり出てくる
+  if(o.phase!=='drained'&&o.prog>0){
+    // 傷口から角質がひも状にムリムリ出てきて、とぐろを巻く
+    const L=(o.prog-(o.wbase||0))*o.r*3.6,w=o.inc?mm*2.7:mm*1.7,pts=grab&&grab.o===o?curve(x,y,dirTo(o,x,y,[0,-1]),L,Math.max(6,Math.ceil(L/1.5)),w*.4,o):coilPath(x,y,L,mm*3,mm*(2.6+o.seed%1.5),o.seed>4.5?1:-1,o);
+    o.lastPts=pts.map(([a2,b2])=>[a2-x,b2-y]);sebum(pts,w,false,1,KER);
+  }
+  // 袋（半透明の膜）
+  if(o.phase==='drained'){
+    // 袋：最初は傷口から少し顔を出す程度→引くほど丸ごと出てくる。ぷるぷる揺れる
+    const d=dirTo(o,x,y,[0,-1]),pr2=o.prog,L=o.r*1.25*pr2,sw0=o.r*.5*(.35+.65*Math.min(1,pr2*1.7)),wob=1+Math.sin(o.t*17)*.06*(o.tension+.2),sw=sw0*wob;
+    const sx=x+d[0]*(L+sw*.4),sy=y+d[1]*(L+sw*.4),mx=(x+sx)/2+d[1]*mm*1.2*Math.sin(o.t*3),my=(y+sy)/2-d[0]*mm*1.2*Math.sin(o.t*3)+mm*.8;
+    if(pr2>.05){ctx.lineCap='round';ctx.strokeStyle='rgba(205,150,140,.75)';ctx.lineWidth=mm*1.6;ctx.beginPath();ctx.moveTo(x,y);ctx.quadraticCurveTo(mx,my,sx,sy);ctx.stroke();ctx.strokeStyle='rgba(245,232,220,.8)';ctx.lineWidth=mm*.7;ctx.beginPath();ctx.moveTo(x,y);ctx.quadraticCurveTo(mx,my,sx,sy);ctx.stroke()}
+    ctx.save();ctx.translate(sx,sy);ctx.rotate(Math.atan2(d[1],d[0])+Math.PI/2);ctx.scale(1/wob,wob);
+    ctx.shadowColor='rgba(70,30,20,.4)';ctx.shadowBlur=8;ctx.shadowOffsetX=4;ctx.shadowOffsetY=6;
+    ctx.fillStyle=rg(-sw*.35,-sw*.35,0,0,0,sw*1.15,[[0,'rgba(255,253,246,.97)'],[.55,'rgba(236,222,204,.93)'],[.85,'rgba(214,180,160,.9)'],[1,'rgba(190,140,125,.85)']]);blob(0,0,sw,o.seed,.08);ctx.fill();ctx.restore();
+    ctx.strokeStyle='rgba(170,40,40,.4)';ctx.lineWidth=.9;for(let k=0;k<4;k++){ctx.beginPath();ctx.moveTo(sx-sw*.65+k*sw*.38,sy+sw*.55);ctx.bezierCurveTo(sx-sw*.3+k*sw*.25,sy+sw*.1,sx-sw*.5+k*sw*.4,sy-sw*.2,sx-sw*.25+k*sw*.3,sy-sw*.6);ctx.stroke()}
+    disc(sx-sw*.35,sy-sw*.4,sw*.16,'rgba(255,255,255,.85)');disc(sx+sw*.2,sy-sw*.1,sw*.06,'rgba(255,255,255,.7)');
+  }
+  ctx.restore();
+  if(o.gold&&!fly)goldHalo(x,y,r*1.2,o.t);
+  if(!fly&&o.p>0&&o.phase!=='drained')ring(x,y,r+14,o.p,pr.lo,pr.hi);
+}
+function ingPts(o,x,y){
+  const pts=[],d=[Math.cos(o.ang),Math.sin(o.ang)],pp=[-d[1],d[0]],run=mm*(3+(o.seed%2)),turns=o.turns||1,cr=mm*(1.1+(o.seed%1)*.7)*(1+(turns-1)*.35);
+  for(let i=0;i<=16;i++){const k=i/16,q=Math.sin(k*3)*mm*.35;pts.push([x+d[0]*run*k+pp[0]*q,y+d[1]*run*k+pp[1]*q])}
+  const[ex,ey]=pts[16],cx=ex+pp[0]*cr,cy=ey+pp[1]*cr,a0=Math.atan2(ey-cy,ex-cx),n=Math.round(24*turns);
+  for(let i=1;i<=n;i++){const k=i/n,an=a0+k*5.4*turns,rr=cr*(1-k*.55)*(1+.09*Math.sin(i*.7+o.seed));pts.push([cx+Math.cos(an)*rr,cy+Math.sin(an)*rr])}
+  return pts;
+}
+// 掘り出した埋没毛：抜いても巻きぐせが残って、引くほどどんどん出てくる
+function drawFreed(o,x,y,w){
+  const ip=ingPts(o,0,0),ang=[],seg=[];let tot=0;
+  for(let i=1;i<ip.length;i++){const dx=ip[i][0]-ip[i-1][0],dy=ip[i][1]-ip[i-1][1],l=Math.hypot(dx,dy);seg.push(l);ang.push(Math.atan2(dy,dx));tot+=l}
+  o.ingLen=tot;o.len=tot/mm;
+  const out=Math.max(mm*2.5,tot*o.prog),rem=tot-out;
+  // まだ皮膚の下に残っている分（出口側から短くなる）
+  const rp=[[x,y]];let acc=0;for(let i=1;i<ip.length&&acc<rem;i++){acc+=seg[i-1];rp.push([x+ip[i][0],y+ip[i][1]])}
+  if(rp.length>1){ctx.save();ctx.lineCap='round';ctx.lineJoin='round';ctx.filter='blur(1.1px)';path(rp);ctx.strokeStyle='rgba(62,64,84,.42)';ctx.lineWidth=w*1.8;ctx.stroke();ctx.filter='none';path(rp);ctx.strokeStyle='rgba(38,34,44,.3)';ctx.lineWidth=w*.75;ctx.stroke();ctx.restore()}
+  disc(x,y,mm*2.2,rg(x,y,0,x,y,mm*2.2,[[0,'rgba(212,78,68,.35)'],[1,'rgba(212,78,68,0)']]));
+  // 外に出た分：元の巻きぐせ（角度の変化）をなぞって曲がる
+  let h=grab&&grab.o===o&&o.pull?Math.atan2(o.pull[1]-y,o.pull[0]-x):o.ang+Math.PI*.85;const sp=[[x,y]];let L=0,px=x,py=y;
+  for(let i=0;i<seg.length&&L<out;i++){const l=Math.min(seg[i],out-L);if(i>0){let da=ang[i]-ang[i-1];while(da>Math.PI)da-=6.283;while(da<-Math.PI)da+=6.283;h+=da*.72}px+=Math.cos(h)*l;py+=Math.sin(h)*l;sp.push([px,py]);L+=l}
+  o.lastPts=sp.map(([a,b])=>[a-x,b-y]);
+  ctx.save();ctx.lineCap='round';ctx.lineJoin='round';ctx.shadowColor='rgba(40,15,10,.45)';ctx.shadowBlur=3;ctx.shadowOffsetX=2;ctx.shadowOffsetY=3;path(sp);ctx.strokeStyle='#17110f';ctx.lineWidth=w;ctx.stroke();ctx.restore();
+  path(offset(sp,w*.25));ctx.strokeStyle='rgba(160,145,135,.55)';ctx.lineWidth=Math.max(.5,w*.25);ctx.stroke();
+  const[tx,ty]=sp[sp.length-1];disc(tx,ty,w*.45,'#2a201c');
+  if(o.prog>.97){disc(x,y,w*1.4,'rgba(255,250,240,.9)')}
+  if(o.gold)goldHalo(x,y,mm*4,o.t);
+}
+function blood(x,y,r){if(r<.3)return;disc(x+r*.15,y+r*.3,r*1.05,'rgba(60,5,5,.3)');disc(x,y,r,rg(x-r*.35,y-r*.4,0,x,y,r,[[0,'#d3352e'],[.6,'#8e0f0e'],[1,'#560505']]));disc(x-r*.35,y-r*.4,r*.22,'rgba(255,255,255,.7)')}
+function wound(x,y,inc,open,bl){
+  if(!inc||inc.length<2)return;const pts=inc.map(([a,b])=>[x+a,y+b]);ctx.save();ctx.lineCap='round';ctx.lineJoin='round';
+  path(pts);ctx.strokeStyle='rgba(175,55,48,.3)';ctx.lineWidth=5+open*3;ctx.stroke();
+  path(pts);ctx.strokeStyle='#5c0f0f';ctx.lineWidth=2.2+open*1.8;ctx.stroke();
+  path(pts);ctx.strokeStyle='#b2433c';ctx.lineWidth=.9+open*.8;ctx.stroke();
+  path(offset(pts,(2.2+open*1.8)*.62));ctx.strokeStyle='rgba(255,236,226,.35)';ctx.lineWidth=1;ctx.stroke();
+  ctx.restore();
+  if(bl)for(const b of bl)blood(x+b[0],y+b[1]+b[2]*3,b[3]*b[2]*mm*.45);
+}
+function drawZit(o,x,y,pr){
+  const r=o.r*(1+o.p*.12),red=o.noTouch,pu=/pus/.test(o.sub),er=r*(red?2.2:pu?2:1.4);
+  disc(x,y,er,rg(x,y,r*.2,x,y,er,[[0,`rgba(205,60,55,${red?.5:pu?.38:.1})`],[1,'rgba(205,60,55,0)']]));
+  disc(x+r*.15,y+r*.2,r*1.1,rg(x+r*.15,y+r*.2,r*.5,x+r*.15,y+r*.2,r*1.1,[[0,'rgba(90,30,25,.22)'],[1,'rgba(90,30,25,0)']]));
+  disc(x,y,r,rg(x-r*.4,y-r*.45,0,x,y,r,[[0,'rgba(255,240,232,.5)'],[.5,`rgba(${red?'230,120,110':'250,215,195'},.2)`],[1,'rgba(200,100,85,0)']]));
+  if(pu){const hr=r*.5*(1+o.p*.3)*(1-Math.min(.7,o.prog*.8));disc(x,y,hr*1.4,rg(x,y,0,x,y,hr*1.4,[[0,'rgba(250,230,160,.6)'],[1,'rgba(250,230,160,0)']]));disc(x,y,hr,rg(x-hr*.35,y-hr*.4,0,x,y,hr,[[0,'#fffbea'],[.55,'#f6e2a2'],[1,'#e2c070']]));disc(x-hr*.35,y-hr*.4,hr*.22,'rgba(255,255,255,.9)')}
+  if(o.sub==='nodule')disc(x,y,r*1.15,rg(x,y,0,x,y,r*1.15,[[0,'rgba(140,45,85,.3)'],[.7,'rgba(160,60,90,.12)'],[1,'rgba(160,60,90,0)']]));
+  if(o.sub==='black'&&o.prog<.05){ctx.fillStyle=rg(x-r*.3,y-r*.3,0,x,y,r*.55,[[0,'#5d4a3a'],[1,'#17100b']]);blob(x,y,r*.72,o.seed,.1);ctx.fill();disc(x-r*.25,y-r*.25,r*.1,'rgba(255,255,255,.6)')}
+  if(o.sub==='white'){disc(x,y,r*.5,rg(x,y,0,x,y,r*.5,[[0,'rgba(255,252,242,.75)'],[1,'rgba(255,252,242,0)']]));if(o.phase==='open')disc(x,y,mm*.35,'#5a2a20')}
+  if(red)disc(x-r*.35,y-r*.4,r*.14,'rgba(255,255,255,.55)');
+  if(o.prog>0&&o.sub==='black'){const L=o.len*mm*(o.prog-(o.wbase||0)),pts=coilPath(x,y,L,mm*2,mm*1.8,o.seed>4.5?1:-1,o);o.lastPts=pts.map(([a2,b2])=>[a2-x,b2-y]);sebum(pts,mm*1.5,false,1,PT.normal)}
+  else if(o.prog>0&&!red){
+    // 膿・皮脂がムニュッとひも状に出て、小さくとぐろを巻く（拭いたらそこからまた出てくる）
+    const vis=o.prog-(o.wbase||0),big=o.sub==='bigpus',L=vis*o.r*(big?5:4.2),w=pu?Math.max(mm*1.7,o.r*(big?.5:.62)):mm*1.35;
+    const cl=pu&&o.prog>.68?Math.min(1,(o.prog-.68)/.32)*mm*(big?4:2.8):0,cw=w*1.3;
+    if(cl>0){const cp=[];for(let i=0;i<=8;i++)cp.push([x+Math.sin(i*.5+o.seed)*.6,y-cl*i/8]);sebum(cp,cw,false,1,CORE);o.coreL=cl}
+    const pulse=Math.max(0,Math.sin(o.t*9))*Math.min(1,o.p*1.4),bulge=1+.3*pulse;
+    if(vis>.01){
+      disc(x,y,w*.62*bulge,rg(x,y,0,x,y,w*.62*bulge,[[0,'#4a2418'],[1,'rgba(90,40,30,.25)']]));
+      const pts=coilPath(x,y-cl,L,mm*2.2+w*1.2,mm*(1.3+(o.seed%1)*.8)*(big?1.5:1),o.seed>4.5?1:-1,o);o.lastPts=pts.map(([a2,b2])=>[a2-x,b2-y]);sebum(pts,w*(1+o.p*.12),false,1,pu?PUS:WHT);
+      // 出口で押し出されてムニュッとふくらむ部分（脈打つ）
+      const[bx,by]=pts[Math.min(2,pts.length-1)],br=w*.56*bulge;disc(bx,by,br,rg(bx-br*.35,by-br*.4,0,bx,by,br,pu?[[0,'#fffbe8'],[.6,'#efd07c'],[1,'rgba(195,154,72,.85)']]:[[0,'#fffdf8'],[.6,'#ebe3cc'],[1,'rgba(198,185,148,.85)']]));
+      // ぬめっと光が流れる
+      for(let j=0;j<2;j++){const k=Math.floor((((o.t*1.4)+j*.5)%1)*(pts.length-1)),[hx,hy]=pts[k];disc(hx-w*.16,hy-w*.2,w*.11,'rgba(255,255,255,.85)')}
+      // 引き伸ばされた毛穴のふち（手前側）
+      ctx.save();ctx.lineCap='round';ctx.strokeStyle='rgba(224,148,128,.95)';ctx.lineWidth=w*.3;ctx.beginPath();ctx.arc(x,y,w*.64*bulge,.2,Math.PI-.2);ctx.stroke();ctx.strokeStyle='rgba(255,232,220,.55)';ctx.lineWidth=w*.09;ctx.beginPath();ctx.arc(x,y,w*.72*bulge,.45,Math.PI-.45);ctx.stroke();ctx.restore();
+    }else disc(x,y,w*.62,rg(x-w*.2,y-w*.25,0,x,y,w*.62,pu?[[0,'#fffbe6'],[.6,'#f2d684'],[1,'rgba(200,160,80,.6)']]:[[0,'#fffdf8'],[.6,'#efe7d2'],[1,'rgba(200,190,160,.6)']]));disc(x-w*.2,y-w*.25,w*.12,'rgba(255,255,255,.9)');
+    if(o.over)blood(x+r*.4,y+r*.2,mm*.6)}
+  if(grab&&grab.o===o){const d=dirTo(o,x,y,[0,-1]),L=mm*(1+o.prog*4),cx=x+d[0]*L,cy=y+d[1]*L,cr=mm*.9;ctx.lineCap='round';ctx.strokeStyle='#e9d6a0';ctx.lineWidth=cr*1.3;ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(cx,cy);ctx.stroke();ctx.strokeStyle='rgba(255,250,232,.8)';ctx.lineWidth=cr*.45;ctx.beginPath();ctx.moveTo(x-cr*.2,y-cr*.2);ctx.lineTo(cx-cr*.2,cy-cr*.2);ctx.stroke();ctx.fillStyle=rg(cx-cr*.3,cy-cr*.4,0,cx,cy,cr*1.2,[[0,'#fffaf0'],[.6,'#ead9a6'],[1,'#b89a5a']]);ctx.beginPath();ctx.ellipse(cx,cy,cr,cr*1.2,Math.atan2(d[1],d[0])+Math.PI/2,0,7);ctx.fill()}
+  if(o.gold)goldHalo(x,y,r*1.6,o.t);
+}
+// 処置のあと：開いた毛穴、赤み、かさぶた、にじむ血
+function checklist(o,x,y){
+  const items=[['止血',o.wiped||o.bmax===0],['消毒',!!o.dis],['軟膏',!!o.oint],['保護',!!o.band]];
+  ctx.save();ctx.font='800 12px "M PLUS Rounded 1c",sans-serif';ctx.textAlign='center';
+  items.forEach(([t,ok],i)=>{const bx=x+(i-1.5)*48,by=y+o.r*1.35+14;ctx.fillStyle=ok?'rgba(19,181,160,.92)':'rgba(0,0,0,.5)';ctx.beginPath();ctx.roundRect(bx-22,by-11,44,20,10);ctx.fill();ctx.fillStyle='#fff';ctx.fillText((ok?'✓':'・')+t,bx,by+4)});
+  ctx.restore();
+}
+function tightOf(o){return Math.min(1,(o.calm||0)*.45+(o.ice||0)*.35+(o.moist||0)*.3+Math.min(.2,o.t/150))}
+function drawMark(o,x,y){
+  if(o.band){drawBand(o,x,y);return}
+  ctx.save();ctx.globalAlpha=1-.6*Math.min(1,o.calm||0);drawMark0(o,x,y);ctx.restore();
+  if(o.cold>.05){const R=(o.kind==='cyst'?o.r*1.5:mm*5);disc(x,y,R,rg(x,y,0,x,y,R,[[0,`rgba(205,232,255,${.45*o.cold})`],[1,'rgba(200,230,255,0)']]))}
+  if(o.moist>.2){const R=(o.kind==='cyst'?o.r*1.4:mm*4.5);disc(x-R*.2,y-R*.25,R*.6,rg(x-R*.2,y-R*.25,0,x-R*.2,y-R*.25,R*.6,[[0,`rgba(255,255,255,${.22*o.moist})`],[1,'rgba(255,255,255,0)']]))}
+  if(o.dis&&o.foamT<3){const a=1-o.foamT/3;for(let k=0;k<14;k++){const an=k*2.4+o.seed,rr=mm*(.5+(k%5)*.45)*(1+o.foamT*.15),bx=x+Math.cos(an)*rr,by=y+Math.sin(an)*rr*.8,br=mm*(.25+(k%3)*.15);disc(bx,by,br,`rgba(255,255,255,${.75*a})`);ctx.strokeStyle=`rgba(190,200,210,${.6*a})`;ctx.lineWidth=.6;ctx.beginPath();ctx.arc(bx,by,br,0,7);ctx.stroke()}}
+  if(o.oint){const R=(o.kind==='cyst'?o.r*1.1:o.kind==='zit'?o.r*1.3:mm*3.2),fade=Math.max(.2,1-(o.t-(o.ointT||0))/10);ctx.save();ctx.globalAlpha=fade;disc(x,y,R,rg(x-R*.3,y-R*.35,0,x,y,R,[[0,'rgba(255,255,255,.55)'],[.35,'rgba(255,250,240,.22)'],[1,'rgba(255,250,240,0)']]));disc(x-R*.35,y-R*.4,R*.12,'rgba(255,255,255,.85)');disc(x+R*.2,y-R*.1,R*.06,'rgba(255,255,255,.7)');ctx.restore()}
+}
+function drawMark0(o,x,y){
+  const f=o.state==='fail',b=o.bleed||0;
+  if(o.wiped)disc(x,y,mm*2.6,'rgba(205,95,85,.12)');
+  if(f){const R=o.kind==='cyst'?o.r*1.25:o.kind==='zit'?o.r*1.8:mm*3.6;
+    disc(x,y,R,rg(x,y,0,x,y,R,[[0,'rgba(200,50,45,.5)'],[.6,'rgba(215,80,70,.25)'],[1,'rgba(215,80,70,0)']]));
+    disc(x,y,R*.6,rg(x-R*.25,y-R*.3,0,x,y,R*.6,[[0,'rgba(255,225,215,.1)'],[1,'rgba(255,225,215,0)']]));
+    if(o.inc)wound(x,y,o.inc,2,o.blood);
+    if(o.kind==='plug'&&o.prog>0){ctx.fillStyle='#3a2a1e';blob(x,y,o.r*.8,o.seed,.1);ctx.fill()}
+    if(b>0)blood(x+mm*.3,y+mm*.2,mm*(.3+b*1.5));return}
+  if(o.kind==='plug'){const r=o.r*1.15*(1-.5*tightOf(o));disc(x,y,r*2.4,rg(x,y,r*.5,x,y,r*2.4,[[0,`rgba(225,105,90,${o.over?.35:.22})`],[1,'rgba(225,105,90,0)']]));
+    ctx.fillStyle=rg(x+r*.35,y+r*.4,0,x,y,r*1.15,[[0,'#4a1f17'],[.6,'#7d3a2c'],[1,'rgba(150,80,60,.35)']]);blob(x,y,r,o.seed,.08);ctx.fill();
+    if(b>0)blood(x+r*.2,y+r*.2,mm*b*.9)}
+  if(o.kind==='hair'){const R=mm*(o.freed?3.4:1.6);disc(x,y,R,rg(x,y,0,x,y,R,[[0,'rgba(215,80,70,.4)'],[1,'rgba(215,80,70,0)']]));disc(x,y,mm*.42*(1-.45*tightOf(o)),'#7b2018');if(b>0)blood(x,y+mm*.2,mm*(.3+b*.9))}
+  if(o.kind==='cyst'){const r=o.r*.8;disc(x,y,r*1.5,rg(x,y,r*.4,x,y,r*1.5,[[0,'rgba(210,80,70,.38)'],[1,'rgba(210,80,70,0)']]));
+    disc(x,y,r*.9,rg(x+r*.25,y+r*.3,0,x,y,r*.9,[[0,'rgba(90,25,20,.28)'],[1,'rgba(90,25,20,0)']]));
+    wound(x,y,o.inc,2.6,o.blood);if(b>0)blood(x,y+mm*.5,mm*(.5+b*2.2))}
+  if(o.kind==='zit'){const r=o.r;disc(x,y,r*1.9,rg(x,y,r*.3,x,y,r*1.9,[[0,'rgba(215,75,65,.42)'],[1,'rgba(215,75,65,0)']]));
+    ctx.fillStyle='#6d1d15';blob(x,y,mm*.55*(1-.5*tightOf(o)),o.seed,.2);ctx.fill();if(b>0)blood(x+mm*.2,y+mm*.3,mm*(.35+b*1.2))}
+}
+function drawObj(o){
+  const[x,y]=P(o),pr=PRESS[held===o?tool:'finger'];
+  if(o.state!=='idle'){drawMark(o,x,y);if(o.kind==='cyst'&&running&&o.t>.8)checklist(o,x,y);
+    if(o.state==='fail'&&o.t<2.2){const a=1-o.t/2.2,R=o.kind==='cyst'?o.r*1.5:mm*6;disc(x,y,R,rg(x,y,0,x,y,R,[[0,`rgba(200,30,30,${.5*a})`],[.6,`rgba(220,70,60,${.25*a})`],[1,'rgba(220,70,60,0)']]))}
+    return}
+  if(o.dmg>.05){const R=(o.kind==='cyst'||o.kind==='zit'?o.r*1.6:mm*5);disc(x,y,R,rg(x,y,0,x,y,R,[[0,`rgba(215,45,40,${Math.min(.55,o.dmg*.55)})`],[1,'rgba(215,45,40,0)']]))}
+  if(o.kind==='plug')drawPlug(o,x,y,0,1,pr);
+  if(o.kind==='hair')drawHair(o,x,y,0,1,pr);
+  if(o.kind==='cyst')drawCyst(o,x,y,0,1,pr);
+  if(o.kind==='zit')drawZit(o,x,y,pr);
+}
+// 肌の上に転がった戦利品
+function drawDeb(d){
+  const e=Math.min(1,d.t/.35),k=1-(1-e)**3,x=d.x0+(d.x-d.x0)*k,y=d.y0+(d.y-d.y0)*k-Math.sin(e*Math.PI)*mm*4,c=[Math.cos(d.a),Math.sin(d.a)],o=d.o;
+  if(d.kind==='core'){const L=Math.max(1.5,d.len)*mm,cw=Math.max(mm*1.6,o.r*.62),pts=[];for(let i=0;i<=8;i++){const t=i/8;pts.push([x+c[0]*(t-.5)*L,y+c[1]*(t-.5)*L])}sebum(pts,cw,false,1,CORE);return}
+  if(d.kind==='drop'){const r=d.sz;disc(x+r*.2,y+r*.3,r,'rgba(90,60,20,.25)');disc(x,y,r,rg(x-r*.35,y-r*.4,0,x,y,r,[[0,'#fffbe6'],[.5,'#f2d684'],[1,'#c79e4c']]));disc(x-r*.3,y-r*.35,r*.25,'rgba(255,255,255,.85)');return}
+  if(d.kind==='zit'&&d.pts){const ox=(d.x-d.x0-d.mx)*k,oy=(d.y-d.y0-d.my)*k,pu2=/pus/.test(o.sub);sebum(d.pts.map(([a,b])=>[d.x0+a+ox,d.y0+b+oy]),pu2?Math.max(mm*1.7,o.r*(o.sub==='bigpus'?.5:.62)):mm*1.35,false,1,pu2?PUS:WHT);return}
+  if(d.kind==='hair'&&d.pts){const ox=(d.x-d.x0-d.mx)*k,oy=(d.y-d.y0-d.my)*k,q=d.pts.map(([a,b])=>[d.x0+a+ox,d.y0+b+oy]);ctx.save();ctx.lineCap='round';ctx.lineJoin='round';ctx.shadowColor='rgba(40,15,10,.4)';ctx.shadowBlur=2;ctx.shadowOffsetX=1.5;ctx.shadowOffsetY=2.5;path(q);ctx.strokeStyle='#17110f';ctx.lineWidth=o.r*2;ctx.stroke();ctx.restore();disc(q[0][0],q[0][1],o.r*2.6,'rgba(255,250,240,.85)');return}
+  if(d.kind==='paste'&&d.pts){const ox=(d.x-d.x0-d.mx)*k,oy=(d.y-d.y0-d.my)*k;sebum(d.pts.map(([a,b])=>[d.x0+a+ox,d.y0+b+oy]),o.inc?mm*2.7:mm*1.7,false,1,KER);return}
+  if(d.kind==='plug'&&d.pts){const ox=(d.x-d.x0-d.mx)*k,oy=(d.y-d.y0-d.my)*k;sebum(d.pts.map(([a,b])=>[d.x0+a+ox,d.y0+b+oy]),Math.max(4.5,o.r*1.55),d.gold,1,o.T);return}
+  if(d.kind==='plug'){const L=Math.max(2,d.len)*mm,w=Math.max(4.5,o.r*1.55),n=Math.max(6,Math.ceil(L/1.3)),pts=[];for(let i=0;i<=n;i++){const t=i/n,q=Math.sin(t*3+d.a*5)*w*.5*o.curl;pts.push([x+c[0]*(t-.5)*L-c[1]*q,y+c[1]*(t-.5)*L+c[0]*q])}sebum(pts,w,d.gold,1,o.T)}
+  if(d.kind==='hair'){const L=d.len*mm,w=o.r*2,p0=[x-c[0]*L/2,y-c[1]*L/2],p1=[x+c[0]*L/2,y+c[1]*L/2];ctx.save();ctx.lineCap='round';ctx.shadowColor='rgba(40,15,10,.4)';ctx.shadowBlur=2;ctx.shadowOffsetX=1.5;ctx.shadowOffsetY=2.5;ctx.strokeStyle='#1b1512';ctx.lineWidth=w;ctx.beginPath();ctx.moveTo(...p0);ctx.lineTo(...p1);ctx.stroke();ctx.restore();disc(p0[0],p0[1],w*1.3,rg(p0[0]-w*.4,p0[1]-w*.4,0,p0[0],p0[1],w*1.3,[[0,'rgba(255,255,250,.9)'],[1,'rgba(225,210,190,.6)']]))}
+  if(d.kind==='paste'||d.kind==='zit'){const n=d.kind==='paste'?9:5,base=d.kind==='paste'?mm*1.5:mm*.9;for(let i=0;i<n;i++){const a=i*2.1+d.a,rr=base*.9*Math.sqrt(i),bx=x+Math.cos(a)*rr,by=y+Math.sin(a)*rr*.7,br=base*(1-i*.04);disc(bx+br*.25,by+br*.35,br,'rgba(80,40,20,.2)');disc(bx,by,br,rg(bx-br*.35,by-br*.4,0,bx,by,br,d.kind==='zit'?[[0,'#fffbe8'],[.55,'#f0d483'],[1,'#c49b4a']]:[[0,'#fbf6e6'],[.6,'#e8dcb7'],[1,'#c4b184']]))}}
+  if(d.kind==='sac'){const sw=o.r*.5;ctx.save();ctx.shadowColor='rgba(70,30,20,.4)';ctx.shadowBlur=8;ctx.shadowOffsetX=4;ctx.shadowOffsetY=6;ctx.fillStyle=rg(x-sw*.35,y-sw*.35,0,x,y,sw*1.1,[[0,'rgba(255,253,246,.96)'],[.6,'rgba(236,224,206,.92)'],[1,'rgba(205,170,150,.9)']]);blob(x,y,sw,o.seed,.12);ctx.fill();ctx.restore();disc(x-sw*.35,y-sw*.35,sw*.15,'rgba(255,255,255,.8)')}
+}
+function jumpFx(x,y){for(let i=0;i<8;i++)parts.push({x,y,vx:(Math.random()-.5)*120,vy:-120-Math.random()*120,t:0,c:'#f6e3a4'});cam.sh=Math.max(cam.sh,.7)}
+function squirt(o,x,y){const n=(o.sub==='bigpus'?12:4)+Math.floor(Math.random()*6);for(let i=0;i<n;i++){const a=Math.random()*6.283,dd=mm*(2.5+Math.random()*10);deb.push({kind:'drop',len:.3,gold:false,o,x0:x,y0:y,x:x+Math.cos(a)*dd,y:y+Math.sin(a)*dd,a,t:0,sz:mm*(.22+Math.random()*.5)})}}
+// レアコメント：架空の有名チャンネルから
+// ---------- 図鑑・チャンネル・シェア ----------
+const LS={get(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
+const ZK=[
+  ['plug-soft','やわらか角栓','白くて細長い。スルスル出る','鼻'],['plug-normal','ふつうの角栓','黒い頭のよくあるやつ','鼻'],['plug-hard','がんこ角栓','途中で引っかかってポコッ','鼻'],['plug-giant','巨大角栓','毛穴ごと大きい。何度も引っかかる','鼻'],['plug-monster','特大ロング角栓','見た目はふつう。でもどんだけ出るねん','鼻'],
+  ['hair-normal','ひげ','毛根の白いのが付いてきたら勝ち','あご'],['hair-ing','埋没毛','皮膚の下でくるっと丸まった毛','あご'],['hair-long','ロング埋没毛','巻きぐせ付きで延々出てくる','あご'],
+  ['zit-pus','黄ニキビ','プチッ→芯','頬'],['zit-bigpus','特大黄ニキビ','膿が止まらない','頬'],['zit-white','白ニキビ','閉じた白いポツ','頬'],['zit-black','黒ニキビ','黒い頭からニュルッ','頬'],['zit-red','赤ニキビ','触らずガマンが正解','頬'],['zit-nodule','しこりニキビ','紫っぽい。絶対触らない','頬'],
+  ['cyst','粉瘤','袋ごと完全摘出','背中']
+];
+let zk={},newZk=[];
+function discover(){}function discoverOf(){}
+const LCAT={plug:'角栓',hair:'ひげ',ing:'埋没毛'};
+function lenBest(c){return LS.get('nuki-len',[]).filter(q=>c?q.c===c:1).reduce((m,q)=>Math.max(m,q.len),0)}
+function recLen(o){
+  let c=null;if(o.kind==='plug'||o.kind==='zit'&&o.sub==='black')c='plug';if(o.kind==='hair')c=o.freed?'ing':'hair';if(!c||!o.len)return;
+  const len=Math.round(o.len*10)/10,b=lenBest(c),v=LS.get('nuki-len',[]);v.push({c,len,d:Date.now(),t:o.type||''});v.sort((a,q)=>q.len-a.len);LS.set('nuki-len',v.slice(0,50));
+  st.vLong=Math.max(st.vLong||0,len);
+  if(len>b){newZk.push(`最長記録更新！${LCAT[c]} ${len.toFixed(1)}mm`);}
+}
+function zkTotal(){return ZK.length+CELEB.length}
+function zkHave(){return Object.keys(zk).length}
+function renderAch(){const have=LS.get('nuki-ach',{});$('achN').textContent=`${Object.keys(have).length} / ${ACH.length}`;$('achGrid').innerHTML=ACH.map(([id,nm,ds])=>`<div class="ach ${have[id]?'on':''}"><b>${have[id]?'★ ':'☆ '}${nm}</b>${ds}</div>`).join('')}
+function renderZk(){
+  const v=LS.get('nuki-len',[]);
+  $('lenBest').innerHTML=Object.entries(LCAT).map(([c,n])=>{const b=lenBest(c);return`<div>${n}<b>${b?b.toFixed(1)+'mm':'—'}</b>${b?'自己最長':'まだ記録なし'}</div>`}).join('');
+  $('zkGrid').innerHTML=v.length?v.slice(0,15).map((q,i)=>{const d=new Date(q.d);return`<li class="${i===0?'top':''}"><i>${i+1}</i><span>${LCAT[q.c]}${q.t==='monster'?'（特大ロング）':''}<br><small>${d.getMonth()+1}/${d.getDate()}</small></span><b>${q.len.toFixed(1)}mm</b></li>`}).join(''):'<li class="empty2" style="display:block">まだ記録がありません。抜いてみよう</li>';
+}
+function renderCh(){
+  const v=LS.get('nuki-vids',[]),tot=v.reduce((a,q)=>a+q.views,0),subs=Math.round(tot*.004);
+  $('chStats').innerHTML=`<div><b>${fmtV(tot)}</b><span>総再生数</span></div><div><b>${fmtV(subs)}人</b><span>登録者</span></div><div><b>${v.length}本</b><span>投稿動画</span></div>`;
+  $('chBest').innerHTML=Object.entries(STAGES).map(([k,S])=>{const b=v.filter(q=>q.s===k).sort((a,c)=>c.views-a.views)[0];return`<div>${S.name}<b>${b?fmtV(b.views)+'回':'—'}</b>${b?'ランク '+b.rk:'まだ撮っていない'}</div>`}).join('');
+  const rc={SS:'linear-gradient(135deg,#ff2d55,#ffcc00,#34c759,#00b7ff)',S:'#ff7a00',A:'#ff0033',B:'#ff6a3d',C:'#5a8fd6',D:'#8a8f94',F:'#222'};
+  $('chVids').innerHTML=v.length?v.map(q=>{const d=new Date(q.d);const esc=t=>String(t).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[c]);return`<li><img src="${q.th||''}" alt=""><div><div class="vt">${esc(q.title)}</div><div class="vm"><span class="rk" style="background:${rc[q.rk]||'#888'}">${esc(q.rk)}</span>${fmtV(q.views)}回視聴 · 綺麗さ${q.cl}点 · ${d.getMonth()+1}/${d.getDate()}</div></div></li>`}).join(''):'<li class="empty2">まだ動画がありません。撮影してみよう</li>';
+}
+let backTo='ovStart',lastShare='';
+function openOv(id,from){backTo=from;['ovStart','ovEnd','ovCh','ovZk','ovAch'].forEach(k=>$(k).hidden=k!==id);if(id==='ovAch')renderAch();if(id==='ovZk')renderZk();if(id==='ovCh')renderCh()}
+document.querySelectorAll('[data-back]').forEach(b=>b.addEventListener('click',()=>{openOv(backTo,'ovStart');if(backTo==='ovStart')stageCards()}));
+$('btnCh').addEventListener('click',()=>openOv('ovCh','ovStart'));$('btnAch').addEventListener('click',()=>openOv('ovAch','ovStart'));$('btnZk').addEventListener('click',()=>openOv('ovZk','ovStart'));$('btnCh2').addEventListener('click',()=>openOv('ovCh','ovEnd'));
+const SAVE_KEYS=['nuki-vids','nuki-len','nuki-ach','nuki-g','nuki-zk','nuki-bestv-hair','nuki-bestv-plug','nuki-bestv-zit','nuki-bestv-cyst','nuki-total-hair','nuki-total-plug','nuki-total-zit','nuki-total-cyst'];
+function exportCode(){const d={};for(const k of SAVE_KEYS){let v=null;try{v=localStorage.getItem(k)}catch(e){}if(v==null)continue;if(k==='nuki-vids'){try{v=JSON.stringify(JSON.parse(v).map(q=>({...q,th:''})))}catch(e){}}d[k]=v}
+  return 'NUKI1.'+btoa(unescape(encodeURIComponent(JSON.stringify(d))))}
+function importCode(c){c=c.trim();if(!c.startsWith('NUKI1.'))throw 0;const d=JSON.parse(decodeURIComponent(escape(atob(c.slice(6)))));let n=0;for(const k of SAVE_KEYS)if(typeof d[k]==='string'){localStorage.setItem(k,d[k]);n++}return n}
+$('btnExp').addEventListener('click',async()=>{const c=exportCode(),t=$('trBox');try{await navigator.clipboard.writeText(c);$('trMsg').textContent='コピーしました。別の端末の「コードを貼り付けて読み込む」に貼ってね'}catch(e){t.hidden=false;t.readOnly=true;t.value=c;t.focus();t.select();$('trMsg').textContent='上のコードを全部コピーしてね'}});
+$('btnImp').addEventListener('click',()=>{const t=$('trBox');t.hidden=false;t.readOnly=false;t.value='';t.placeholder='NUKI1. から始まるコードを貼り付け';t.focus();$('btnImpGo').hidden=false;$('trMsg').textContent=''});
+$('btnImpGo').addEventListener('click',()=>{try{importCode($('trBox').value);$('trMsg').textContent='読み込みました！';$('btnImpGo').hidden=true;$('trBox').hidden=true;renderCh();stageCards()}catch(e){$('trMsg').textContent='コードが正しくないみたい。もう一度コピーしてきてね'}});
+$('btnShare').addEventListener('click',async()=>{const b=$('btnShare');try{await navigator.clipboard.writeText(lastShare);b.textContent='コピーしました！';}catch(e){const t=$('shareBox');t.hidden=false;t.value=lastShare;t.focus();t.select();b.textContent='下の文章をコピーしてね'}setTimeout(()=>b.textContent='結果をコピーしてシェア',2200)});
+const CELEB=[
+  {n:'ドクター毛穴【皮膚科医】',c:'医者から見ても手際がきれい。良い子は真似しないでね',ok:(cl)=>cl>=70},
+  {n:'ズボッと太郎TV',c:'うちのチャンネルより気持ちよく抜けてて嫉妬してます'},
+  {n:'ぬるぬるASMRちゃん',c:'音が良すぎる…私の動画のBGMにしたいレベル'},
+  {n:'毛穴王チャンネル',c:'毛穴界に新星あらわる。今度コラボしましょう'},
+  {n:'角栓ハンター隊長',c:'この角栓、100点満点中120点',st:'plug'},
+  {n:'ヒゲ剃り侍',c:'毛根ごと抜けるのは武士の誉れ',st:'hair'},
+  {n:'ニキビ研究所',c:'芯の出方が教科書どおり。資料に使わせてください',st:'zit'},
+  {n:'粉瘤ドクターK',c:'袋を残さないのはプロの仕事。お見事',st:'cyst'},
+  {n:'炎上ウォッチャー速報',c:'これは燃えますねぇ…記事にします',fire:1},
+  {n:'美肌おねえさん',c:'アフターケアまで完璧で泣いた。保湿は正義',ok:(cl)=>cl>=85}
+];
+function pickRare(v,cl,fire){
+  const ch=fire?.35:.05+(v>=1e5?.3:v>=1e4?.12:0)+(cl>=90?.1:0);if(Math.random()>ch)return null;
+  const c=CELEB.filter(q=>(q.fire?fire:!fire)&&(!q.st||q.st===stage)&&(!q.ok||q.ok(cl)));return c.length?c[Math.floor(Math.random()*c.length)]:null;
+}
+// ---------- お題・実績・称号 ----------
+const MIS={all:[['45秒以内に挨拶して締める',C=>C.greeted&&C.recT<=45],['綺麗さ90点以上で投稿',C=>C.cl>=90],['ノーミス（失敗・ちぎれ0）',C=>C.fails===0&&C.st.tears===0&&C.wins>0],['血を残さず投稿',C=>C.cs.blood===0&&C.st.blood>0],['全部の跡をスキンケア',C=>C.care>=.8]],
+  plug:[['特大ロングか巨大角栓を抜く',C=>C.st.monster||C.st.giant],['がんこ角栓を3本抜く',C=>C.st.hard>=3],['20mm以上の角栓を抜く',C=>(C.st.vLong||0)>=20],['角栓を全部抜く',C=>C.cs.left===0]],
+  hair:[['埋没毛を掘り出して抜く',C=>C.st.ingrown>0],['ひげを全部毛根ごと',C=>C.cs.left===0&&C.fails===0],['30mm以上の毛を抜く',C=>(C.st.vLong||0)>=30]],
+  zit:[['赤ニキビ・しこりに触らない',C=>C.reds.length>0&&C.reds.every(o=>!o.touched)],['膿ニキビを3つプチッ',C=>C.st.pus>=3],['ニキビを全部処置',C=>C.cs.left===0]],
+  cyst:[['粉瘤を袋ごと2つ摘出',C=>C.st.cyst>=2],['粉瘤の傷を完璧に手当て',C=>C.st.cyst>0&&C.cs.cyst===0],['切らずに中身を出し切る',C=>C.st.cyst>0&&!objs.some(o=>o.inc)]]};
+let mission=null;
+function pickMission(s){const L=[...MIS.all,...MIS[s]];const m=L[Math.floor(Math.random()*L.length)];return{t:m[0],ok:m[1]}}
+const ACH=[
+  ['first','初投稿','動画を1本投稿',(C,G)=>G.n>=1],['v10','常連投稿者','動画を10本投稿',(C,G)=>G.n>=10],['v50','ヌキヌキ職人','動画を50本投稿',(C,G)=>G.n>=50],
+  ['rA','Aランク','Aランクを取る',C=>/^(A|S|SS)$/.test(C.rk)],['rS','Sランク','Sランクを取る',C=>/^(S|SS)$/.test(C.rk)],['rSS','伝説の神回','SSランクを取る',C=>C.rk==='SS'],
+  ['w1','1万回再生','1本で1万回再生',C=>C.views>=1e4],['w10','10万回再生','1本で10万回再生',C=>C.views>=1e5],['w100','100万回再生','1本で100万回再生',C=>C.views>=1e6],['w1000','1000万回再生','1本で1000万回再生',C=>C.views>=1e7],
+  ['tot','ミリオンチャンネル','総再生数100万回',(C,G)=>G.tot>=1e6],['sub','登録者1万人','登録者1万人',(C,G)=>G.tot*.004>=1e4],
+  ['mon','どんだけ出るねん','特大ロング角栓を抜く',C=>C.st.monster>0],['l50','50mmの壁','50mm以上を抜く',C=>(C.st.vLong||0)>=50],['gi3','巨大コレクター','1本で巨大角栓を3本',C=>C.st.giant>=3],
+  ['ing','埋没毛ハンター','埋没毛を抜く',C=>C.st.ingrown>0],['hairAll','ツルツル','ひげを全部毛根ごと抜く',C=>C.stage==='hair'&&C.cs.left===0&&C.fails===0],
+  ['big','膿の洪水','特大黄ニキビをつぶす',C=>(C.st.bigpus||0)>0],['red','鋼の自制心','赤ニキビ・しこりに一度も触らない',C=>C.reds.length>0&&C.reds.every(o=>!o.touched)],
+  ['cy','完全摘出','粉瘤を袋ごと取る',C=>C.st.cyst>0],['cyc','名医','粉瘤の傷を完璧に手当て',C=>C.st.cyst>0&&C.cs.cyst===0],
+  ['c100','ツヤ肌','綺麗さ100点',C=>C.cl>=100],['fast','神速','30秒以内に全部抜いて挨拶',C=>C.cs.left===0&&C.recT<=30&&C.greeted],['nomiss','ノーミス職人','5個以上処置してノーミス',C=>C.wins>=5&&C.fails===0&&C.st.tears===0],
+  ['fire','炎上デビュー','炎上する',C=>C.fire],['rare','有名人の目に留まる','レアコメントをもらう',C=>!!C.rare],['allA','オールラウンダー','全ステージでAランク以上',(C,G)=>Object.keys(STAGES).every(k=>G.vids.some(q=>q.s===k&&/^(A|S|SS)$/.test(q.rk)))]
+];
+function chTitle(subs){return subs>=1e6?'殿堂入りYouTuber':subs>=1e5?'人気YouTuber':subs>=1e4?'中堅YouTuber':subs>=1e3?'駆け出しYouTuber':subs>=100?'新人YouTuber':'見習いYouTuber'}
+function fmtV(n){return n>=1e8?(n/1e8).toFixed(1)+'億':n>=1e4?(n/1e4).toFixed(n>=1e5?0:1)+'万':Math.round(n).toLocaleString()}
+function cleanState(){
+  const real=objs.filter(o=>!(o.kind==='zit'&&o.noTouch)),left=real.filter(o=>o.state==='idle').length,marks=objs.filter(o=>o.state!=='idle');
+  const blood=marks.filter(o=>(o.bleed||0)>.15&&!o.band).length+scars.filter(q=>q.beads.length).length;
+  const rough=marks.filter(o=>o.kind!=='cyst'&&Math.min(1,(o.calm||0)+(o.oint?.5:0)+(o.band?.7:0)+(o.moist||0)*.3+(o.ice||0)*.4)<.5&&(o.state==='fail'||o.kind!=='hair')).length+objs.filter(o=>o.state==='idle'&&(o.dmg||0)>.3).length;
+  const junk=deb.filter(d=>!d.gone).length,cyst=marks.filter(o=>o.kind==='cyst'&&!(o.oint&&o.band&&o.dis&&(o.wiped||o.bmax===0))).length;
+  const c=100-left/Math.max(1,real.length)*45-blood*7-rough*4-junk*2.5-cyst*12-scars.filter(q=>!q.band).length*4-orderPen*3-procPen;
+  return{c:Math.max(0,Math.round(c)),left,blood,rough,junk,cyst,cuts:scars.filter(q=>!q.band).length};
+}
+function careRate(){const m=objs.filter(o=>o.state!=='idle');if(!m.length)return 0;return m.reduce((a,o)=>a+Math.min(1,(o.calm||0)+(o.oint?.5:0)+(o.band?.7:0)+(o.moist||0)*.3+(o.dis?.2:0)),0)/m.length}
+function estV(){return Math.round((score*28+wins*1500)*(.8+careRate()*.5))}
+function nearMark(x,y){let b=null,bd=1e9;for(const o of objs){if(o.state==='idle')continue;const[ox,oy]=P(o),d=Math.hypot(ox-x,oy-y),lim=(o.kind==='cyst'?o.r*1.3:o.kind==='zit'?o.r*1.8:mm*5);if(d<lim&&d<bd){bd=d;b=o}}return b}
+function milkAt(x,y){
+  if(!sheen.length||Math.hypot(sheen[sheen.length-1].x-x,sheen[sheen.length-1].y-y)>mm*3)sheen.push({x,y,t:0,r:mm*(4+Math.random()*2),milk:1});
+  for(const o of objs){if(o.state==='idle')continue;const[ox,oy]=P(o);if(Math.hypot(ox-x,oy-y)>mm*7+(o.r||0))continue;if(!o.toned)pen(o,'milk');const m0=o.moist||0;o.moist=Math.min(1,m0+.08);if(m0<.6&&o.moist>=.6){score+=15;msg(ox,oy-24,'うるおい +15','#e9fffb')}}
+}
+function iceTick(dt){
+  coldSp=coldSp.filter(q=>(q.t+=dt)<7);
+  if(!iceOn||!running||tool!=='ice'){iceT=0;return}const[x,y]=toW(ptr.sx,ptr.sy);iceT+=dt;
+  if(!coldSp.length||Math.hypot(coldSp[coldSp.length-1].x-x,coldSp[coldSp.length-1].y-y)>mm*2||coldSp[coldSp.length-1].t>.3)coldSp.push({x,y,t:0});
+  if(iceT<dt*1.5)msg(x,y-mm*9,'ひんやり…','#dff4ff');
+  for(const o of objs){const[ox,oy]=P(o);if(Math.hypot(ox-x,oy-y)>mm*8+(o.r||0))continue;
+    if(o.state==='idle'){o.dmg=Math.max(0,(o.dmg||0)-dt*.25);continue}
+    o.ice=Math.min(1,(o.ice||0)+dt*.4);const c0=o.calm||0;o.calm=Math.min(1,c0+dt*.3);o.cold=Math.min(1,(o.cold||0)+dt);if(c0<.6&&o.calm>=.6){score+=15;msg(ox,oy-24,'ひんやり +15','#dff4ff')}}
+  if(Math.random()<dt*3)sheen.push({x:x+(Math.random()-.5)*mm*8,y:y+(Math.random()-.5)*mm*6,t:1.6,r:mm*(.6+Math.random()*.6),drop:1});
+}
+function tonerAt(x,y){
+  if(!sheen.length||Math.hypot(sheen[sheen.length-1].x-x,sheen[sheen.length-1].y-y)>mm*3){sheen.push({x,y,t:0,r:mm*(4+Math.random()*2),life:9,wet:1});if(Math.random()<.5)sheen.push({x:x+(Math.random()-.5)*mm*6,y:y+(Math.random()-.5)*mm*6,t:0,r:mm*(.4+Math.random()*.5),drop:1,life:9})}
+  const R2=mm*7;let hit=0;
+  for(const o of objs){const[ox,oy]=P(o);if(Math.hypot(ox-x,oy-y)>R2+(o.r||0))continue;
+    if(o.state==='idle'){if(o.dmg>0){o.dmg=Math.max(0,o.dmg-.04);hit=1}continue}
+    o.toned=true;if((o.moist||0)>.3)pen(o,'toner');const c0=o.calm||0;o.calm=Math.min(1,c0+.08);if(c0<.6&&o.calm>=.6){score+=15;msg(ox,oy-24,'しっとり +15','#e9fffb')}hit=1}
+}
+function pen(o,k){if(o&&!o['pn_'+k]){o['pn_'+k]=1;orderPen++}}
+function careTap(x,y){
+  const o=nearMark(x,y);
+  if(!o){
+    const sc=scars.find(q=>q.path.some(([a,b])=>Math.hypot(a-x,b-y)<mm*5));
+    if(sc){if(tool==='band'){sc.band=true;sc.beads=[];score+=20}else if(tool==='oint'){sc.beads=[]}}
+    freeCare.push({type:tool,x,y,a:(Math.random()-.5)*1.4,t:0});
+    if(tool==='band'){msg(x,y-24,sc?'切り傷に絆創膏 +20':'ペタッ','#e9fffb');wet(1800,1,.08,.15,.5)}else if(tool==='oint'){msg(x,y-24,'ぬりぬり','#e9fffb');wet(500,3,.25,.1,.6)}else{msg(x,y-24,'シュワッ','#e9fffb');wet(5200,.5,.8,.06,.85)}
+    return}
+  const[ox,oy]=P(o);
+  if(o.band&&tool!=='band')return msg(ox,oy-24,'絆創膏の上からは塗れない…先に塗ってから貼ろう','#ffe7a3');
+  const wound=o.kind==='cyst'||o.state==='fail'||(o.bmax||0)>0||(o.bleed||0)>.05;
+  if(tool==='dis'){if(o.dis)return msg(ox,oy-24,'もう消毒した');if((o.bleed||0)>.15&&!o.wiped)pen(o,'dis');o.dis=true;o.foamT=0;score+=20;msg(ox,oy-24,'シュワッ…消毒 +20','#e9fffb');wet(5200,.5,.9,.07,.85);wet(3000,.8,.6,.04,.7);return}
+  if(tool==='oint'){if(o.oint)return msg(ox,oy-24,'もう塗ってある');if(wound&&!o.dis)pen(o,'oint');if((o.bleed||0)>.15&&!o.wiped)pen(o,'oblood');o.oint=true;o.ointT=o.t;o.bmax=0;o.bleed=(o.bleed||0)*.3;o.calm=Math.min(1,(o.calm||0)+.35);score+=25;msg(ox,oy-24,'軟膏ぬりぬり +25','#e9fffb');wet(500,3,.25,.12,.6)}
+  else{if(o.band)return msg(ox,oy-24,'もう貼ってある');if(wound&&!o.oint)pen(o,'band');if(o.kind==='cyst'&&!o.dis)pen(o,'bdis');o.band={a:(Math.random()-.5)*1.2};o.bmax=0;o.bleed=0;score+=30;msg(ox,oy-24,'絆創膏ペタッ +30','#e9fffb');wet(1800,1,.08,.15,.5);tone(300,200,.05,'sine',.1)}
+}
+function drawBand(o,x,y){
+  const L=o.kind==='cyst'?o.r*2.6:o.kind==='zit'?Math.max(mm*9,o.r*3.2):mm*9,Wd=L*.4;
+  ctx.save();ctx.translate(x,y);ctx.rotate(o.band.a);ctx.shadowColor='rgba(60,25,15,.35)';ctx.shadowBlur=5;ctx.shadowOffsetX=2;ctx.shadowOffsetY=3;
+  const g=ctx.createLinearGradient(0,-Wd/2,0,Wd/2);g.addColorStop(0,'#efd2ae');g.addColorStop(.5,'#e3bd93');g.addColorStop(1,'#cfa47a');
+  ctx.fillStyle=g;ctx.beginPath();ctx.roundRect(-L/2,-Wd/2,L,Wd,Wd/2);ctx.fill();ctx.shadowColor='transparent';
+  ctx.fillStyle='#f7ecdc';ctx.beginPath();ctx.roundRect(-L*.18,-Wd*.38,L*.36,Wd*.76,3);ctx.fill();
+  if(o.bleed>.05||o.bmax===0&&o.kind==='cyst')disc(0,0,Wd*.22,'rgba(190,60,55,.22)');
+  ctx.fillStyle='rgba(150,105,70,.35)';for(let i=-3;i<=3;i++)if(Math.abs(i)>1)for(let j=-1;j<=1;j++)disc(i*L*.065,j*Wd*.22,.8,'rgba(150,105,70,.35)');
+  ctx.strokeStyle='rgba(255,255,255,.35)';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(-L*.42,-Wd*.32);ctx.lineTo(L*.42,-Wd*.32);ctx.stroke();
+  ctx.restore();
+}
+function wipeAt(x,y){
+  const R=mm*6;let hit=0;
+  for(const d of deb){if(d.gone||d.t<.35)continue;if(Math.hypot(d.x-x,d.y-y)<R+d.len*mm*.4){d.gone=true;if(d.kind==='drop'||d.kind==='core'){score+=2;stain('rgba(228,198,100,.5)');hit=1;continue}trayAdd(d.kind,d.len,d.gold,d.broken,d.o);score+=10;stain(d.kind==='plug'?'rgba(200,175,110,.6)':d.kind==='hair'?'rgba(40,30,25,.6)':d.kind==='zit'?'rgba(228,198,100,.6)':'rgba(220,205,170,.65)');hit=1;msg(d.x,d.y-20,'フキッ +10')}}
+  for(const o of objs){if(o.state!=='idle'||!(o.kind==='zit'||o.kind==='cyst'&&o.phase!=='drained'))continue;const vis=o.prog-(o.wbase||0),[ox,oy]=P(o);if(vis>.06&&Math.hypot(ox-x,oy-y)<R+(o.r||mm)*1.5){o.wbase=o.prog;score+=5;stain(o.kind==='zit'&&/pus/.test(o.sub)?'rgba(228,198,100,.6)':'rgba(222,212,180,.6)');hit=1;msg(ox,oy-24,'フキッ')}}
+  for(const o of objs){const[ox,oy]=P(o),bl=(o.bleed||0)>.06||(o.blood&&o.blood.some(b=>b[2]>.25));if(bl&&Math.hypot(ox-x,oy-y)<R+(o.r||mm)*1.2){o.bleed=0;if(o.state!=='idle')o.wiped=true;if(o.blood)o.blood.forEach(b=>b[2]=0);stain('rgba(170,20,20,.55)');hit=1;msg(ox,oy-20,'血を拭いた')}}
+  const before=sheen.length;sheen=sheen.filter(q=>!(q.wet||q.drop&&q.life)||Math.hypot(q.x-x,q.y-y)>R);if(sheen.length<before){hit=1;msg(x,y-30,'化粧水をポンポン拭き取り');if(Math.random()<.4)stain('rgba(200,225,240,.35)')}
+  for(const s of scars)if(s.beads.length&&s.path.some(([a,b])=>Math.hypot(a-x,b-y)<R)){s.beads=[];stain('rgba(170,20,20,.5)');hit=1}
+  
+}
+function stain(c){tis.push({x:(Math.random()-.5)*mm*8,y:(Math.random()-.5)*mm*8,r:mm*(1+Math.random()*1.6),c});if(tis.length>16){tis.length=0;msg(ptr.x,ptr.y-40,'新しいティッシュに交換')}}
+// 器具（金属の質感と落ち影）
+function steel(x0,y0,x1,y1){const g=ctx.createLinearGradient(x0,y0,x1,y1);g.addColorStop(0,'#f4f7f8');g.addColorStop(.45,'#b9c3c8');g.addColorStop(.55,'#8d989e');g.addColorStop(1,'#dfe5e8');return g}
+function drawCursor(){
+  if(!ptr.in||!running)return;const[x,y]=toW(ptr.sx,ptr.sy),pressing=held&&PRESS[tool];
+  ctx.save();ctx.lineCap='round';ctx.shadowColor='rgba(40,15,10,.4)';ctx.shadowBlur=8;ctx.shadowOffsetX=pressing?3:8;ctx.shadowOffsetY=pressing?4:11;
+  if(tool==='finger'){
+    const tg=held&&held.state==='idle'?held:null,[cx,cy]=tg?P(tg):[x,y],base=tg&&tg.kind==='cyst'?tg.r*1.3:mm*8.5,gap=Math.max(mm*3.4,base-(tg?Math.min(1,tg.p):0)*base*.42);
+    ctx.shadowColor='transparent';for(const sg of[-1,1])finger(cx+sg*gap,cy,sg,!tg,tg?Math.min(1,tg.p):0);
+  }
+  if(tool==='tissue'){
+    ctx.translate(x,y);ctx.rotate(-.18);const q=mm*7.5;
+    if(wiping){ctx.shadowOffsetX=2;ctx.shadowOffsetY=3;ctx.shadowBlur=4}
+    ctx.fillStyle=rg(-q*.4,-q*.5,0,0,0,q*1.5,[[0,'#ffffff'],[.7,'#f3f1ec'],[1,'#dedad2']]);
+    ctx.beginPath();ctx.moveTo(-q,-q*.9);ctx.quadraticCurveTo(0,-q*1.06,q,-q*.85);ctx.quadraticCurveTo(q*1.1,0,q*.9,q);ctx.quadraticCurveTo(0,q*1.12,-q*.95,q*.9);ctx.quadraticCurveTo(-q*1.12,0,-q,-q*.9);ctx.fill();
+    ctx.shadowColor='transparent';
+    for(const t of tis)disc(t.x,t.y,t.r,rg(t.x,t.y,0,t.x,t.y,t.r,[[0,t.c],[1,'rgba(255,255,255,0)']]));
+    ctx.strokeStyle='rgba(175,170,160,.5)';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(-q*.9,q*.1);ctx.quadraticCurveTo(0,q*.2,q*.95,q*.05);ctx.stroke();
+    ctx.strokeStyle='rgba(200,196,188,.35)';ctx.lineWidth=.6;for(let k=0;k<6;k++){ctx.beginPath();ctx.moveTo(-q*.7+k*q*.25,-q*.7);ctx.quadraticCurveTo(-q*.5+k*q*.25,-q*.2,-q*.65+k*q*.25,q*.6);ctx.stroke()}
+  }
+  if(tool==='toner'){ctx.globalAlpha=.92;const q=mm*5.5;ctx.fillStyle=rg(x-q*.3,y-q*.35,0,x,y,q,[[0,'#ffffff'],[.7,'#f2f1ee'],[1,'#d9d6cf']]);blob(x,y,q,3,.05);ctx.fill();ctx.shadowColor='transparent';ctx.fillStyle='rgba(200,225,235,.35)';blob(x+q*.1,y+q*.1,q*.7,5,.12);ctx.fill();ctx.strokeStyle='rgba(205,200,190,.5)';ctx.lineWidth=.6;for(let k=0;k<7;k++){ctx.beginPath();ctx.arc(x+Math.cos(k)*q*.3,y+Math.sin(k*2)*q*.3,q*.25,k,k+2);ctx.stroke()}}
+  if(tool==='oint'){ctx.translate(x,y);ctx.rotate(-.6);ctx.fillStyle='#f4f6f7';ctx.beginPath();ctx.roundRect(mm*1.6,-mm*2.2,mm*11,mm*4.4,mm*.8);ctx.fill();ctx.shadowColor='transparent';ctx.fillStyle='#2f7fc1';ctx.fillRect(mm*5,-mm*2.2,mm*4,mm*4.4);ctx.fillStyle='#d7dde0';ctx.fillRect(0,-mm*.8,mm*1.8,mm*1.6);disc(0,0,mm*.7,'rgba(255,255,250,.95)')}
+  if(tool==='dis'){ctx.translate(x,y);ctx.rotate(-.5);ctx.fillStyle='rgba(235,245,250,.9)';ctx.beginPath();ctx.roundRect(mm*1.5,-mm*2.6,mm*9,mm*5.2,mm*1.2);ctx.fill();ctx.shadowColor='transparent';ctx.fillStyle='rgba(150,200,230,.5)';ctx.fillRect(mm*2.5,-mm*.8,mm*7,mm*3);ctx.fillStyle='#e0473c';ctx.fillRect(mm*4.5,-mm*1.6,mm*2.4,mm*.5);ctx.fillRect(mm*5.45,-mm*2.6+mm*.5,mm*.5,mm*2.4);ctx.fillStyle='#ffffff';ctx.fillRect(0,-mm*.6,mm*1.6,mm*1.2)}
+  if(tool==='ice'&&iceOn){ctx.save();ctx.shadowColor='transparent';const k=Math.min(1,iceT/2),R2=mm*9;ctx.strokeStyle='rgba(200,235,255,.75)';ctx.lineWidth=3;ctx.beginPath();ctx.arc(x,y,R2,-Math.PI/2,-Math.PI/2+k*6.283);ctx.stroke();for(let i=0;i<6;i++){const a=performance.now()/700+i*1.05,rr=mm*(5+((performance.now()/40+i*30)%40)/10);disc(x+Math.cos(a)*rr,y+Math.sin(a)*rr-mm*2,mm*.6,'rgba(235,248,255,.35)')}ctx.restore()}
+  if(tool==='ice'){const q=mm*7;ctx.globalAlpha=iceOn?.95:.85;if(iceOn){ctx.shadowOffsetX=2;ctx.shadowOffsetY=3}ctx.fillStyle=rg(x-q*.4,y-q*.3,0,x,y,q*1.3,[[0,'#f2fbff'],[.6,'#bfe3f5'],[1,'#86c3df']]);ctx.beginPath();ctx.roundRect(x-q,y-q*.65,q*2,q*1.3,q*.35);ctx.fill();ctx.shadowColor='transparent';for(let k=0;k<12;k++)disc(x-q*.8+((k*37)%16)/16*q*1.6,y-q*.5+((k*53)%10)/10*q,1.2,'rgba(255,255,255,.8)');ctx.strokeStyle='rgba(255,255,255,.7)';ctx.lineWidth=1.5;ctx.beginPath();ctx.moveTo(x-q*.7,y-q*.4);ctx.lineTo(x+q*.5,y-q*.45);ctx.stroke()}
+  if(tool==='milk'){ctx.globalAlpha=.92;const q=mm*5.5;ctx.fillStyle=rg(x-q*.3,y-q*.35,0,x,y,q,[[0,'#ffffff'],[.7,'#f4f2ee'],[1,'#dcd8d0']]);blob(x,y,q,4,.05);ctx.fill();ctx.shadowColor='transparent';ctx.fillStyle='rgba(255,255,255,.85)';blob(x+q*.1,y,q*.55,2,.2);ctx.fill()}
+  if(tool==='band'){ctx.globalAlpha=.75;drawBand({kind:'plug',band:{a:-.3}},x,y)}
+  if(tool==='pusher'){
+    ctx.strokeStyle=steel(x+mm*2,y+mm*2,x+mm*3,y+mm*1);ctx.lineWidth=mm*1.1;ctx.beginPath();ctx.moveTo(x+mm*1.4,y+mm*1.4);ctx.lineTo(x+mm*14,y+mm*14);ctx.stroke();
+    ctx.strokeStyle=steel(x-mm*2,y-mm*2,x+mm*2,y+mm*2);ctx.lineWidth=mm*.55;ctx.beginPath();ctx.arc(x,y,mm*1.9,0,7);ctx.stroke();
+    ctx.shadowColor='transparent';ctx.strokeStyle='rgba(60,70,75,.4)';ctx.lineWidth=1;for(let k=0;k<5;k++){const t=6+k*1.2;ctx.beginPath();ctx.moveTo(x+mm*t-mm*.5,y+mm*t+mm*.5);ctx.lineTo(x+mm*t+mm*.5,y+mm*t-mm*.5);ctx.stroke()}
+  }
+  if(tool==='tweez'){
+    const k=grab?mm*.15:mm*1.1;
+    for(const sgn of[-1,1]){ctx.fillStyle=steel(x+sgn*k,y,x+sgn*(k+mm*2),y);ctx.beginPath();ctx.moveTo(x+sgn*k,y);ctx.lineTo(x+sgn*(k+mm*.6),y);ctx.lineTo(x+sgn*mm*5.5+mm*3,y+mm*16);ctx.lineTo(x+sgn*mm*4.2+mm*3,y+mm*16);ctx.closePath();ctx.fill()}
+  }
+  if(tool==='scalpel'){
+    ctx.fillStyle=steel(x,y,x+mm*3,y+mm*3);ctx.beginPath();ctx.moveTo(x,y);ctx.quadraticCurveTo(x+mm*4.5,y+mm*.2,x+mm*5.2,y+mm*2.4);ctx.lineTo(x+mm*3.4,y+mm*4.2);ctx.closePath();ctx.fill();
+    ctx.fillStyle=steel(x+mm*4,y+mm*3,x+mm*5,y+mm*2);ctx.beginPath();ctx.moveTo(x+mm*4,y+mm*2.6);ctx.lineTo(x+mm*15,y+mm*13);ctx.lineTo(x+mm*14,y+mm*14.2);ctx.lineTo(x+mm*3.2,y+mm*3.6);ctx.closePath();ctx.fill();
+    ctx.shadowColor='transparent';ctx.strokeStyle='rgba(255,255,255,.9)';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(x+.5,y+.5);ctx.quadraticCurveTo(x+mm*4.3,y+mm*.5,x+mm*5,y+mm*2.3);ctx.stroke();
+  }
+  ctx.restore();
+}
+const LOW=matchMedia('(pointer:coarse)').matches||innerWidth<600;
+function lens(x,y,R,amt){
+  if(amt<=.02||!skin||R<2)return;const n=LOW?6:9;
+  for(let i=1;i<n;i++){const rr=R*(1-i/n),f=1+amt*.32*(1-(rr/R)**2);ctx.save();ctx.beginPath();ctx.arc(x,y,rr,0,7);ctx.clip();ctx.translate(x,y);ctx.scale(f,f);ctx.translate(-x,-y);ctx.drawImage(skin,0,0,W,H);ctx.restore()}
+}
+function dent(x,y,R,amt){
+  if(amt<=.02||!skin)return;const n=LOW?5:7;
+  for(let i=1;i<n;i++){const rr=R*(1-i/n),f=1-amt*.22*(1-(rr/R)**2);ctx.save();ctx.beginPath();ctx.arc(x,y,rr,0,7);ctx.clip();ctx.translate(x,y);ctx.scale(f,f);ctx.translate(-x,-y);ctx.drawImage(skin,0,0,W,H);ctx.restore()}
+  disc(x,y,R,rg(x,y,R*.35,x,y,R,[[0,'rgba(95,40,30,0)'],[.55,`rgba(95,40,30,${.16*amt})`],[1,'rgba(95,40,30,0)']]));
+  ctx.save();ctx.filter=`blur(${Math.max(2,R*.08).toFixed(1)}px)`;ctx.lineCap='round';ctx.strokeStyle=`rgba(90,35,25,${.24*amt})`;ctx.lineWidth=R*.2;ctx.beginPath();ctx.arc(x,y,R*.62,3.3,5.0);ctx.stroke();ctx.strokeStyle=`rgba(255,236,226,${.28*amt})`;ctx.lineWidth=R*.14;ctx.beginPath();ctx.arc(x,y,R*.62,.15,1.75);ctx.stroke();ctx.filter='none';ctx.restore();
+}
+function tent(x,y,dx,dy,R,amt){
+  if(amt<=.02||!skin)return;const n=8;
+  for(let i=1;i<n;i++){const k=i/n,rr=R*(1-k),sh=amt*R*.35*k*k;ctx.save();ctx.beginPath();ctx.arc(x+dx*sh*.6,y+dy*sh*.6,rr,0,7);ctx.clip();ctx.translate(dx*sh,dy*sh);ctx.translate(x,y);ctx.scale(1+amt*.12*k,1+amt*.12*k);ctx.translate(-x,-y);ctx.drawImage(skin,0,0,W,H);ctx.restore()}
+  const hx=x+dx*R*.25*amt,hy=y+dy*R*.25*amt;
+  disc(hx,hy,R*.7,rg(hx-R*.2,hy-R*.25,0,hx,hy,R*.7,[[0,`rgba(255,242,232,${.35*amt})`],[1,'rgba(255,242,232,0)']]));
+  disc(x-dx*R*.2,y-dy*R*.2,R*.8,rg(x-dx*R*.2,y-dy*R*.2,R*.3,x-dx*R*.2,y-dy*R*.2,R*.8,[[0,`rgba(90,35,25,${.18*amt})`],[1,'rgba(90,35,25,0)']]));
+}
+function lensFor(o){
+  const[x,y]=P(o);
+  if(o.state==='fail'){if(o.kind==='cyst')lens(x,y,o.r*1.1,.7*Math.max(0,1-o.t/2.2));return}
+  const jg=Math.sin(o.t*26)*(o.jig||0)*.45,tr=(o.trem||0)*.5;
+  if(o.state!=='idle'){if(o.jig>.03)lens(x,y,(o.kind==='cyst'||o.kind==='zit'?o.r*1.5:mm*5),Math.max(0,jg*1.4+.15*o.jig));return}
+  if(o.kind==='plug'&&(o.p>0||o.stuck||o.jig>.03)){const pp=Math.min(1.15,o.p+(o.stuck?.2:0));if(pp>.02)dent(x,y,o.r*(5.5+pp*3),Math.min(1,pp*.95));lens(x,y,o.r*(1.7+pp*.9),Math.max(0,Math.min(1.4,pp*.9+tr+jg)))}
+  if(o.kind==='cyst'){lens(x,y,o.r*1.12*(o.phase==='drained'?.72:1-o.prog*.28),(o.phase==='drained'?.25:(o.phase==='intact'?1:.75)*(1-o.prog*.65))+o.p*.45+tr+jg);if(grab&&grab.o===o)dent(x,y,o.r*.9,Math.min(1,o.tension*.9+.2))}
+  if(held===o&&tool==='finger'&&o.p>.03){const base=o.kind==='cyst'?o.r*1.3:mm*8.5,gap=Math.max(mm*3.4,base-Math.min(1,o.p)*base*.42);for(const sg of[-1,1]){const dx=x+sg*gap*.6;dent(dx,y,mm*3.6,Math.min(1,o.p*1.1));ctx.strokeStyle=`rgba(120,55,40,${.3*Math.min(1,o.p)})`;ctx.lineWidth=1;for(let k=1;k<4;k++){const wx=x+sg*(gap*.6-k*gap*.11);ctx.beginPath();ctx.moveTo(wx,y-mm*1.6);ctx.quadraticCurveTo(wx+sg*mm*.5,y,wx,y+mm*1.6);ctx.stroke()}}}
+  if(held===o&&tool==='pusher'&&o.p>.03)dent(x,y,mm*4.5,Math.min(1,o.p)*.7);
+  if(o.kind==='zit'&&o.p>.02&&!o.noTouch)dent(x,y,o.r*(3.2+o.p*1.5),Math.min(1,o.p*.8));
+  if(o.kind==='zit')lens(x,y,o.r*(1.5+o.p*.5),Math.max(0,(o.noTouch?.9:.55)+o.p*1.1+tr+jg));
+  if(o.kind==='hair'){if(o.ing)lens(x,y,mm*3.6,.5+o.p*.6);else if(grab&&grab.o===o){const d=dirTo(o,x,y,[0,1]);tent(x,y,d[0],d[1],mm*5,Math.min(1,(.3+o.tension*.9+o.prog*.5)*o.stick))}else if(o.tension>0){const d=dirTo(o,x,y,[0,1]);lens(x+d[0]*mm,y+d[1]*mm,mm*3.2,Math.min(1,o.tension*.8+o.prog*.3))}}
+}
+function finger(fx,fy,sg,lift,pr=0){
+  ctx.save();ctx.translate(fx,fy);ctx.scale(sg,1);ctx.rotate(.42);
+  const w=mm*3.3,L=mm*32,fl=pr*.14;
+  const body=()=>{ctx.beginPath();ctx.moveTo(L,-w*1.2);ctx.bezierCurveTo(w*5,-w*1.12,w*2.2,-w*1.02,w*1.05,-w);ctx.bezierCurveTo(-w*(.58-fl),-w*.96,-w*(.58-fl),w*.96,w*1.05,w);ctx.bezierCurveTo(w*2.2,w*1.04,w*5,w*1.16,L,w*1.25);ctx.closePath()};
+  ctx.shadowColor='rgba(70,25,15,.38)';ctx.shadowBlur=lift?18:9;ctx.shadowOffsetX=lift?5:2;ctx.shadowOffsetY=lift?15:5;
+  const g=ctx.createLinearGradient(0,-w*1.2,0,w*1.25);g.addColorStop(0,'#b97a63');g.addColorStop(.14,'#e6b296');g.addColorStop(.38,'#f6d4bf');g.addColorStop(.62,'#eebfa6');g.addColorStop(.88,'#cf8f77');g.addColorStop(1,'#a8654f');
+  ctx.fillStyle=g;body();ctx.fill();ctx.shadowColor='transparent';
+  ctx.save();body();ctx.clip();
+  // 指先の赤み（押すと白っぽくなる）
+  disc(0,0,w*1.8,rg(w*.1,0,0,w*.1,0,w*1.8,[[0,pr>.25?`rgba(255,238,224,${.35*pr})`:'rgba(232,128,108,.3)'],[1,'rgba(232,128,108,0)']]));
+  // 関節のしわ
+  ctx.strokeStyle='rgba(125,60,45,.3)';ctx.lineWidth=.9;for(let k=0;k<4;k++){const kx=w*6.4+k*w*.24+(k%2)*w*.05;ctx.beginPath();ctx.moveTo(kx,-w*1.1);ctx.bezierCurveTo(kx-w*.2,-w*.35,kx-w*.2,w*.35,kx+w*.05,w*1.2);ctx.stroke()}
+  ctx.strokeStyle='rgba(150,80,62,.1)';ctx.lineWidth=.7;for(let k=0;k<14;k++){const kx=w*2.6+k*w*.42;ctx.beginPath();ctx.moveTo(kx,-w*1.1);ctx.quadraticCurveTo(kx+w*.1,0,kx-w*.05,w*1.2);ctx.stroke()}
+  // 背の稜線ハイライト
+  ctx.strokeStyle='rgba(255,240,230,.35)';ctx.lineWidth=w*.35;ctx.lineCap='round';ctx.beginPath();ctx.moveTo(w*2.6,-w*.32);ctx.lineTo(L,-w*.4);ctx.stroke();
+  ctx.restore();
+  // 爪
+  const n0=w*.42,n1=w*2.5,nw=w*.72;
+  const nail=()=>{ctx.beginPath();ctx.moveTo(n1,-nw);ctx.bezierCurveTo(n1-w*.6,-nw*1.02,n0+w*.35,-nw*1.02,n0+w*.12,-nw*.7);ctx.quadraticCurveTo(n0-w*.12,0,n0+w*.12,nw*.7);ctx.bezierCurveTo(n0+w*.35,nw*1.02,n1-w*.6,nw*1.02,n1,nw);ctx.quadraticCurveTo(n1+w*.22,0,n1,-nw);ctx.closePath()};
+  ctx.save();ctx.shadowColor='rgba(120,60,45,.35)';ctx.shadowBlur=2;ctx.shadowOffsetY=1;
+  ctx.fillStyle=rg(n0+w*.9,-nw*.35,0,n0+w*1,0,w*1.5,[[0,'#f9e1d8'],[.55,'#efbfb2'],[1,'#d99a8a']]);nail();ctx.fill();ctx.restore();
+  ctx.save();nail();ctx.clip();
+  ctx.fillStyle='rgba(255,250,244,.92)';ctx.beginPath();ctx.moveTo(n0+w*.5,-nw*1.1);ctx.quadraticCurveTo(n0+w*.22,0,n0+w*.5,nw*1.1);ctx.lineTo(n0-w*.3,nw*1.1);ctx.lineTo(n0-w*.3,-nw*1.1);ctx.closePath();ctx.fill();
+  ctx.fillStyle='rgba(255,244,240,.45)';ctx.beginPath();ctx.ellipse(n1+w*.05,0,w*.38,nw*.62,0,0,7);ctx.fill();
+  ctx.strokeStyle='rgba(255,255,255,.75)';ctx.lineWidth=1.3;ctx.beginPath();ctx.moveTo(n0+w*.65,-nw*.48);ctx.quadraticCurveTo(n0+w*1.3,-nw*.6,n1-w*.15,-nw*.52);ctx.stroke();
+  ctx.fillStyle='rgba(180,105,90,.18)';ctx.fillRect(n0,nw*.55,n1,nw*.5);
+  ctx.restore();
+  ctx.strokeStyle='rgba(165,90,75,.55)';ctx.lineWidth=1.1;ctx.beginPath();ctx.moveTo(n1-w*.02,-nw*.95);ctx.quadraticCurveTo(n1+w*.26,0,n1-w*.02,nw*.95);ctx.stroke();
+  ctx.restore();
+}
+function draw(){
+  if(!skin){ctx.fillStyle='#d9a98f';ctx.fillRect(0,0,W,H);return}
+  ctx.fillStyle='#b98670';ctx.fillRect(0,0,W,H);ctx.save();const shx=(Math.random()-.5)*cam.sh*mm,shy=(Math.random()-.5)*cam.sh*mm;ctx.translate(W/2+shx,H/2+shy);ctx.scale(cam.z,cam.z);ctx.translate(-cam.x,-cam.y);
+  ctx.imageSmoothingQuality='high';ctx.drawImage(skin,0,0,W,H);
+  for(const o of objs)lensFor(o);
+  for(const s of scars){ctx.lineCap='round';ctx.strokeStyle='rgba(95,15,15,.85)';ctx.lineWidth=2.6;path(s.path);ctx.stroke();ctx.strokeStyle='rgba(200,70,65,.8)';ctx.lineWidth=1;path(s.path);ctx.stroke();
+    for(const b of s.beads){const r=b[2]*Math.min(1,s.t*.8+.2);disc(b[0],b[1]+r*.6,r,'#7d0b0b');disc(b[0]-r*.3,b[1]+r*.3,r*.3,'rgba(255,255,255,.5)')}}
+  for(const q of coldSp){const a=Math.min(1,q.t*3)*(1-q.t/7),R2=mm*8;disc(q.x,q.y,R2,rg(q.x,q.y,0,q.x,q.y,R2,[[0,`rgba(220,238,255,${.13*a})`],[.6,`rgba(190,220,250,${.08*a})`],[1,'rgba(200,225,250,0)']]))}
+  for(const o of objs)drawObj(o);
+  for(const d of deb)if(!d.gone)drawDeb(d);
+  for(const c of freeCare){c.t+=1/60;if(c.type==='band')drawBand({kind:'plug',band:{a:c.a}},c.x,c.y);else if(c.type==='oint'){const R2=mm*2.6;disc(c.x,c.y,R2,rg(c.x-R2*.3,c.y-R2*.35,0,c.x,c.y,R2,[[0,'rgba(255,255,255,.55)'],[.4,'rgba(255,250,240,.2)'],[1,'rgba(255,250,240,0)']]));disc(c.x-R2*.35,c.y-R2*.4,R2*.12,'rgba(255,255,255,.85)')}else if(c.t<3){const a=1-c.t/3;for(let k=0;k<10;k++){const an=k*2.4,rr=mm*(.4+(k%4)*.45),bx=c.x+Math.cos(an)*rr,by=c.y+Math.sin(an)*rr*.8;disc(bx,by,mm*(.25+(k%3)*.12),`rgba(255,255,255,${.7*a})`)}}}
+  for(const q of sheen){if(q.drop){const r=q.r,a=1-q.t/(q.life||3);disc(q.x,q.y,r,`rgba(215,235,245,${.5*a})`);disc(q.x-r*.3,q.y-r*.3,r*.3,`rgba(255,255,255,${.9*a})`);continue}const a=(1-q.t/(q.life||3))*(q.milk?.55:q.wet?.42:.3);if(q.wet){ctx.strokeStyle=`rgba(255,255,255,${a*.9})`;ctx.lineWidth=1.2;ctx.beginPath();ctx.arc(q.x,q.y,q.r*.78,3.6,4.7);ctx.stroke()}disc(q.x,q.y,q.r,rg(q.x-q.r*.3,q.y-q.r*.35,0,q.x,q.y,q.r,[[0,`rgba(255,255,255,${a})`],[.5,`rgba(255,252,245,${a*.35})`],[1,'rgba(255,255,255,0)']]))}
+  if(stroke&&stroke.pts.length>1){ctx.strokeStyle='rgba(255,255,255,.75)';ctx.setLineDash([5,5]);ctx.lineWidth=1.5;path(stroke.pts);ctx.stroke();ctx.setLineDash([])}
+  for(const q of parts){ctx.globalAlpha=1-q.t/.8;disc(q.x,q.y,2.2,q.c)}
+  ctx.globalAlpha=1;ctx.textAlign='center';ctx.font='800 17px "M PLUS Rounded 1c",sans-serif';
+  for(const f of floats){if(f.big){ctx.save();ctx.font='800 30px "M PLUS Rounded 1c",sans-serif';ctx.globalAlpha=Math.max(0,Math.min(1,1.6-Math.abs(f.t)));ctx.lineWidth=6;ctx.strokeStyle='rgba(0,0,0,.5)';ctx.strokeText(f.txt,cam.x,cam.y);ctx.fillStyle='#fff';ctx.fillText(f.txt,cam.x,cam.y);ctx.restore();continue}const yy=f.y-f.t*40,tx=Math.max(90,Math.min(W-90,f.x));ctx.globalAlpha=Math.max(0,1-f.t/1.3);ctx.lineWidth=4;ctx.strokeStyle='rgba(0,0,0,.45)';ctx.strokeText(f.txt,tx,yy);ctx.fillStyle=f.c;ctx.fillText(f.txt,tx,yy)}
+  ctx.globalAlpha=1;drawCursor();ctx.restore();
+  if(cd>0){const t=['3','2','アクション！'][cdStage]||'3',k=((2.4-cd)%.8)/.8,sc=1.4-Math.min(1,k*4)*.4;ctx.fillStyle='rgba(0,0,0,.35)';ctx.fillRect(0,0,W,H);ctx.save();ctx.translate(W/2,H/2);ctx.scale(sc,sc);ctx.globalAlpha=Math.min(1,1.6-k);ctx.textAlign='center';ctx.textBaseline='middle';ctx.font=`800 ${cdStage<2?110:56}px "M PLUS Rounded 1c",sans-serif`;ctx.lineWidth=10;ctx.strokeStyle='rgba(0,0,0,.45)';ctx.strokeText(t,0,0);ctx.fillStyle=cdStage<2?'#fff':'#ffd400';ctx.fillText(t,0,0);ctx.restore();if(mission){ctx.save();ctx.textAlign='center';ctx.font='800 18px "M PLUS Rounded 1c",sans-serif';ctx.lineWidth=5;ctx.strokeStyle='rgba(0,0,0,.5)';ctx.strokeText('今回のお題：'+mission.t,W/2,H/2+90);ctx.fillStyle='#fff';ctx.fillText('今回のお題：'+mission.t,W/2,H/2+90);ctx.restore()}}
+  if(running){const on=(performance.now()/600|0)%2;ctx.fillStyle='rgba(0,0,0,.45)';ctx.beginPath();ctx.roundRect(10,10,112,28,8);ctx.fill();if(on)disc(26,24,6,'#ff2a2a');ctx.fillStyle='#fff';ctx.font='800 14px "M PLUS Rounded 1c",sans-serif';ctx.textAlign='left';ctx.fillText(`REC ${Math.floor(recT/60)}:${String(Math.floor(recT%60)).padStart(2,'0')}`,38,29)}
+}
+for(const s of scars)s.t=0;
+function loop(t){let dt=Math.min(.05,(t-last)/1000||0);last=t;ts+=(1-ts)*Math.min(1,dt*3.5);dt*=ts;for(const s of scars)s.t+=dt;update(dt);draw();requestAnimationFrame(loop)}
+requestAnimationFrame(loop);
+
+/* ---------- 戦利品 ---------- */
+function tray(kind,len,gold,broken,o){
+  if(!o){trayAdd(kind,len,gold,broken,o);return}
+  const[x0,y0]=P(o),a=Math.random()*6.283,pts=(kind==='plug'||kind==='paste'&&o.kind==='cyst'||kind==='hair'&&o.freed||kind==='zit'&&o.kind==='zit'&&o.prog-(o.wbase||0)>.05)&&!broken&&o.lastPts?o.lastPts:null;
+  if(pts){const mx=pts.reduce((s2,p)=>s2+p[0],0)/pts.length,my=pts.reduce((s2,p)=>s2+p[1],0)/pts.length;deb.push({kind,len,gold,broken,o,x0,y0,mx,my,x:x0+mx+Math.cos(a)*mm*2.5,y:y0+my+Math.sin(a)*mm*2.5,pts,a,t:0})}
+  else{const dist=(o.kind==='cyst'?o.r*1.3:o.kind==='zit'?o.r*2+mm*3:mm*6)+mm*2,x=Math.max(mm*6,Math.min(W-mm*6,x0+Math.cos(a)*dist)),y=Math.max(mm*6,Math.min(H-mm*6,y0+Math.sin(a)*dist));deb.push({kind,len,gold,broken,o,x0,y0,x,y,a:Math.random()*6.283,t:0})}
+  const x=deb[deb.length-1].x,y=deb[deb.length-1].y;
+  if(!debHint){debHint=true;setTimeout(()=>msg(x,y+40,'ティッシュで拭き取ろう','#e9fffb'),400)}
+}
+function trayAdd(kind,len,gold,broken,o){
+  const box=$('plugs');box.querySelector('.empty')?.remove();trayN++;
+  let svg,label;
+  if(kind==='plug'){const h=Math.round(10+len*3.2);label=(broken?'切れ ':'')+(o&&o.type!=='normal'?o.T.n+' ':'')+len.toFixed(1)+'mm';const C=gold?['#e3c879','#fbf0c8']:o?[o.T.col[1],o.T.col[2]]:['#ddcc9c','#fbf5e2'],sw=o?Math.round(4+o.r/mm*2):6;svg=`<svg width="${sw+10}" height="${h}"><path d="M8 ${h-3} Q${broken?4:13} ${h/2} 8 7" stroke="${C[0]}" stroke-width="${sw}" stroke-linecap="round" fill="none"/><path d="M7 ${h-4} Q${broken?3:11} ${h/2} 7 8" stroke="${C[1]}" stroke-width="1.5" fill="none"/><ellipse cx="8" cy="6" rx="4" ry="3.5" fill="#2a2019"/></svg>`}
+  if(kind==='hair'){const h=Math.round(10+len*3);label=len.toFixed(1)+'mm';svg=`<svg width="12" height="${h}"><path d="M6 2 L6 ${h-6}" stroke="#1b1512" stroke-width="${gold?2.6:1.6}" stroke-linecap="round"/><ellipse cx="6" cy="${h-5}" rx="3" ry="4.5" fill="#f6efe2" opacity=".9"/></svg>`}
+  if(kind==='paste'){label='中身';svg=`<svg width="32" height="24"><circle cx="9" cy="16" r="6" fill="#e8dcb7"/><circle cx="19" cy="14" r="7" fill="#f1e8cf"/><circle cx="14" cy="8" r="5" fill="#dccb9e"/><circle cx="17" cy="11" r="1.5" fill="#fff"/></svg>`}
+  if(kind==='zit'){label=o&&/pus/.test(o.sub)?'膿と芯':'白い皮脂';svg=`<svg width="26" height="20"><circle cx="9" cy="12" r="6" fill="#f0d483"/><circle cx="16" cy="10" r="5" fill="#fbeeb8"/><circle cx="14" cy="8" r="1.4" fill="#fff"/></svg>`}
+  if(kind==='sac'){label=broken?'袋（破れ）':'袋 '+len.toFixed(0)+'mm';svg=`<svg width="30" height="26"><ellipse cx="15" cy="14" rx="12" ry="10" fill="${gold?'#fff3c4':'#f4ece2'}" stroke="#d1b8a5"/><path d="M8 18q5-6 3-12M15 22q3-8 1-16" stroke="#c0504a" stroke-width=".8" fill="none" opacity=".6"/>${broken?'<path d="M20 6l-3 6 4 5" stroke="#9b2a22" fill="none" stroke-width="1.5"/>':''}</svg>`}
+  const d=document.createElement('div');d.className='plug'+(gold?' gold':'');d.innerHTML=svg+`<small>${label}</small>`;box.appendChild(d);
+  $('trayInfo').textContent=trayN+'個';
+}
+
+/* ---------- 進行 ---------- */
+function start(s){
+  try{ac=ac||new (window.AudioContext||window.webkitAudioContext)();ac.resume()}catch(e){}
+  const changed=s!==stage||!skin;stage=s;seed=(Math.random()*1e6)|0;cam.x=W/2;cam.y=H/2;cam.z=1;cam.sh=0;zAnim=null;pinch=null;pts2.clear();bake();
+  objs=[];parts=[];floats=[];scars=[];deb=[];sheen=[];freeCare=[];coldSp=[];orderPen=0;procPen=0;lastF={o:null,t:0};tis.length=0;debHint=false;recT=0;allDone=false;time=60;newZk=[];warned=false;ending=false;greeted=false;st={longest:0,giant:0,hard:0,pops:0,pus:0,squirt:0,blood:0,tears:0,cyst:0,ingrown:0,perfect:0};score=0;combo=0;maxCombo=0;wins=0;fails=0;held=null;grab=null;stroke=null;
+  for(let i=0;i<STAGES[s].count;i++)spawn();
+  if(changed){trayN=0;$('plugs').innerHTML='<div class="empty">ここに抜いたものが並びます</div>';$('trayInfo').textContent='0個'}
+  mission=null;$('sub').textContent=`${STAGES[s].name}（${STAGES[s].place}）を撮影中・60秒`;
+  setTool(changed?(s==='hair'?'tweez':s==='cyst'?'scalpel':'finger'):tool);
+  $('ovStart').hidden=true;$('ovEnd').hidden=true;running=false;cd=2.4;cdStage=-1;
+}
+function complete(){
+  running=false;held=null;grab=null;stroke=null;
+  const n=wins+fails,rate=n?wins/n:0,reds=objs.filter(o=>o.kind==='zit'&&o.noTouch&&o.state==='idle'),rb=reds.reduce((a,o)=>a+(o.touched?30:100),0);score+=rb;
+  const care=careRate(),cs=cleanState(),cl=cs.c,left=cs.junk,bloody=cs.blood;
+  let thumb='';try{thumb=cv.toDataURL('image/jpeg',.72)}catch(e){}
+  // タイトル
+  const PRE=['【閲覧注意】','【神回】','【ASMR】',''],pre=PRE[Math.floor(Math.random()*PRE.length)],L=st.longest;
+  const T={plug:st.monster?`どんだけ出るねん…${L.toFixed(0)}mmの超ロング角栓`:st.giant?`巨大角栓が${st.giant}本…ズボッと全部抜けた`:L>=12?`超ロング角栓${L.toFixed(0)}mm！ニュルニュル止まらない`:st.hard?`がんこ角栓がポコッと抜ける瞬間`:(wins?`いちご鼻の角栓を${wins}本ぜんぶ抜いてみた`:`いちご鼻の角栓に挑戦してみた`),
+    hair:st.ingrown?`埋没毛を掘り出して毛根ごとスルッ`:(wins?`ひげを毛根ごと${wins}本抜く`:`ひげ抜きに挑戦してみた`),
+    zit:st.bigpus?`特大の黄ニキビ…膿が止まらない`:st.pus?`パンパンの黄ニキビをプチッ…芯まで出た`:`白ニキビをぜんぶ押し出す`,
+    cyst:st.cyst?`背中の粉瘤を袋ごと完全摘出`:`粉瘤の中身がドロッと出てきた`}[stage];
+  const title=pre+T;
+  // 再生数
+  let mult=1+Math.min(1.5,maxCombo*.06);
+  mult*=1+(st.monster||0)*.5+st.blood*.04+st.squirt*.03+st.giant*.15+(L>12?.3:0)+st.cyst*.25+st.pops*.04+st.ingrown*.08;
+  mult*=.25+Math.pow(cl/100,1.6)*1.25+care*.15;
+  const done=objs.filter(o=>o.state!=='idle').length,tooShort=recT<15&&done<3,tempo=tooShort?.8:Math.max(.7,Math.min(1.7,.7+done/Math.max(1,recT)*6+(cs.left===0?(60-recT)/60*.5:0)));mult*=tempo*(greeted?1.08:1);mult*=Math.max(.35,1-fails*.07);mult*=1+reds.filter(o=>!o.touched).length*.05;
+  const antis=[];const A=(c,...t)=>{if(c)antis.push(...t)};
+  const nm={plug:'角栓',hair:'ひげ',zit:'ニキビ',cyst:'粉瘤'}[stage];A(cs.left,`${nm}残ってるじゃん…${cs.left}個も放置で中途半端すぎ`);A(cs.blood,'血だらけで放置とか不衛生すぎる');A(cs.rough>2,'肌荒れたまま終わるの無理。冷やせよ');A(cs.junk>2,'取ったやつ肌に放置してて汚い');
+  A(cs.cyst,'傷口そのまま？感染するって');A(cs.cuts,'健康な肌まで切ってて普通に怖い');A(fails>3,'押しすぎ。素人がやると跡残るやつ');
+  const fire=cl<40||antis.length>=4;
+  const vir=Math.exp((Math.random()-.4)*1.7)*(fire?.35:1),views0=Math.max(37,Math.round((score*28+wins*1500)*mult*vir));const rare=pickRare(views0,cl,fire);if(rare)discover('celeb-'+CELEB.indexOf(rare));const mOk=mission?!!mission.ok({stage,st,cs,cl,care,fails,wins,recT,greeted,reds}):false,views=Math.round((rare?views0*1.35:views0)*(mOk?1.3:1));
+  const likeR=Math.max(.004,(.012+cl/100*.03+care*.01+(n?st.perfect/n:0)*.015)*(fire?.3:1)),likes=Math.round(views*likeR),cm=Math.round(views*(.0015+st.blood*.0002));
+  const perfect=cs.left===0&&cs.blood===0&&cs.junk===0&&cs.cyst===0&&cs.cuts===0&&cs.rough===0&&fails===0&&st.tears===0&&orderPen===0&&cl>=95,ss=!fire&&perfect&&greeted&&!tooShort&&tempo>=1.2&&recT<=45&&antis.length===0&&!((stage==='plug'||stage==='zit')&&objs.filter(o=>o.state!=='idle').length>3&&objs.filter(o=>(o.moist||0)>.5).length<2),rk0=fire?'F':ss?'SS':cs.left===0&&cl>=88&&fails===0?'S':(cs.left===0&&cl>=72)||views>=1e5?'A':cl>=55||views>=1e4?'B':views>=1e3||cl>=35?'C':'D',ORD=['D','C','B','A','S','SS'],cap=fails>1?'C':fails>0?'B':(st.tears>0||objs.some(o=>o.over)||orderPen>0)?'A':'SS',rk=rk0==='F'?'F':ORD[Math.min(ORD.indexOf(rk0),ORD.indexOf(cap))];$('eRank').textContent=rk;$('eRank').className='rank '+rk;
+  const buzz=fire?'炎上中…':ss?'完璧！！伝説の神回':views>=1e6?'大バズ！！急上昇1位':views>=1e5?'バズった！':views>=1e4?'ちょいバズ':views>=1e3?'じわじわ':'伸びなかった…';
+  // コメント
+  const pool=[];const P2=(c,...t)=>{if(c)pool.push(...t)};
+  P2(1,'この音ずっと聞いてられる','気持ちよすぎて3回見た','寝る前に見るのが日課になった','無限に見れる','夜中に見て後悔してない','手つきがプロ','ASMRとして優秀すぎ','チャンネル登録しました','もっと長尺でやってほしい','声出たｗ','この人の動画は安心して見れる','スッキリしすぎて肩こり治った','ゾワッとしたけど最後まで見た','音量MAXで見てる','ご飯中に見るもんじゃなかった（見た）','おすすめに出てきて沼った','これで今日も寝られる');
+  P2(stage==='plug','自分の鼻もやりたくなってきた','いちご鼻の救世主','角栓の質がいい','角栓ソムリエとして満点','黒い頭から白い本体が出てくるのたまらん','鼻がムズムズしてきた');
+  P2(stage==='hair','毛根の白いのが好き','ひげ抜きASMR助かる','スルッと抜ける瞬間最高','ツルツルになってくの気持ちいい','毛根付きで抜けると嬉しいよね');
+  P2(st.bigpus,'特大ニキビの量えぐい','膿の量バグってるｗ');P2(objs.some(o=>o.sub==='black'&&o.state==='done'),'黒ニキビがニュルッと出るの好き');P2(objs.some(o=>o.sub==='nodule'&&o.state==='idle'&&!o.touched),'しこりニキビは触らないの正解','しこりは皮膚科案件よね');
+  P2(stage==='zit','プチッで声出た','芯が出た瞬間ガッツポーズした','ニキビ潰し動画で一番好き','黄ニキビ選手権優勝');
+  P2(stage==='cyst','医者より上手い説','チーズみたいなの出てきた…','粉瘤動画は全部見てる','袋の中身ってこうなってるんだ');
+  P2(st.monster,'どんだけ出るねんｗｗｗ','終わらなくて笑った','これ1本で動画成立してる','途中で一回トイレ行ったけどまだ出てた');P2(st.giant,'巨大角栓デカすぎて声出た','デカすぎて別の生き物かと思った');P2(st.pops,'最後のポコッで鳥肌立った','ポコッの瞬間のために生きてる');P2(L>10,'どこまで伸びるんｗｗ');P2(L>14,'ギネス狙える長さ');
+  P2(st.pus,'プチッの瞬間が最高');P2(st.squirt,'飛んだｗｗ思わず画面拭いた','画面に飛んできたかと思った');P2(st.blood>2,'血出てて無理…でも見ちゃう');P2(st.blood>1&&cs.blood===0,'血出たけどちゃんと止血してて安心');
+  P2(care>.6,'アフターケアまでしてて好感しかない','化粧水まで塗ってて優しい世界','アフターケア完璧で好感度爆上がり');P2(objs.some(o=>o.band),'絆創膏の貼り方が丁寧');P2(objs.some(o=>o.cold>0||o.calm>.8),'冷やしてあげてるの偉い');
+  P2(n&&st.perfect/n>.7,'一発で抜くの職人技');P2(greeted,'最後の挨拶で好きになった','ご視聴ありがとうございました、こちらこそ');P2(!tooShort&&tempo>=1.3,'テンポ良くて一瞬で見終わった','短いのに満足感すごい');A(tooShort,'一瞬で終わったｗ何も起きてない','え、もう終わり？');A(!tooShort&&recT>=30&&tempo<.85,'間延びしてて途中で飛ばした','テンポ悪い…');P2(maxCombo>5,'テンポ良すぎて止まらない');P2(st.tears,'途中でちぎれたの悔しすぎる','ちぎれた瞬間「あっ」って言った');P2(fails>2,'それは押しすぎ…痛そう');
+  P2(st.cyst,'袋ごと取れたの神すぎる','傷口のケアまで丁寧');P2(st.ingrown,'埋没毛のループが出てくるとこ好き','どんだけ出てくるねんこの毛ｗｗ','巻きぐせ残ってるのリアル');P2(reds.length&&reds.every(o=>!o.touched),'赤ニキビ触らないの偉い');P2(cl>=90,'仕上がりがツルツルで感動','ビフォーアフター完璧');
+  A(cs.left,'途中でやめるな','見落としてるの気になって集中できない');A(cs.blood,'見てて痛い。止血しろ');A(cs.rough>2,'真っ赤で痛々しい…');A(cs.junk>2,'ティッシュで拭いて');
+  A(objs.some(o=>o.kind==='cyst'&&o.state!=='idle'&&!o.dis),'消毒しないと化膿するよ');A((stage==='plug'||stage==='zit')&&objs.filter(o=>o.state!=='idle').length>3&&objs.filter(o=>(o.moist||0)>.5).length<2,'保湿しないと毛穴またすぐ詰まるよ');
+  A(fire,'通報しました','これ真似する人出たらどうするの','低評価押した','普通にグロ注意つけて');
+  const names=['ぬきぬき民','毛穴ウォッチャー','夜中に見てる人','角栓ソムリエ','いちご鼻卒業生','ASMR中毒','通りすがりの皮膚','ポコッ待ち','鼻パック愛用者','皮膚科行け勢','深夜2時の視聴者','ひげ剃り職人','保湿の鬼','ニキビ跡に悩む人','チーズ好き','元エステティシャン','看護師やってます','初見です'];
+  pool.sort(()=>Math.random()-.5);antis.sort(()=>Math.random()-.5);
+  const nA=Math.min(antis.length,fire?4:2),list=[...antis.slice(0,nA).map(t=>[t,1]),...pool.slice(0,Math.max(1,5-nA)).map(t=>[t,0])].sort(()=>Math.random()-.5);
+  $('eCmts').innerHTML=(rare?`<li class="rare"><small>✓ @${rare.n}</small>${rare.c}</li>`:'')+list.map(([t,bad],i)=>`<li${bad?' class="anti"':''}><small>@${names[Math.floor(Math.random()*names.length)]} ・ ${Math.max(1,Math.round(likes*(.02+Math.random()*.08))).toLocaleString()}いいね</small>${t}</li>`).join('');
+  const dis=Math.round(likes*(fire?1.6:.03+antis.length*.08));$('eBad').textContent=fmtV(dis);$('eBuzz').classList.toggle('fire',fire);
+  $('eThumb').src=thumb;$('eTitle').textContent=title;$('eDur').textContent=`${Math.floor(recT/60)}:${String(Math.floor(recT%60)).padStart(2,'0')}`;
+  $('eBuzz').textContent=buzz;$('eLikes').textContent=fmtV(likes);$('eCare').textContent=cl+'点';$('eTempo').textContent=tooShort?'短すぎ':tempo>=1.35?'神テンポ':tempo>=1.1?'サクサク':tempo>=.9?'ふつう':'ダラダラ';
+  const t0=performance.now(),tick=()=>{const k=Math.min(1,(performance.now()-t0)/1600),e=1-(1-k)**3;$('eViews').textContent=fmtV(views*e);if(k<1)requestAnimationFrame(tick)};tick();
+  let bv=0;try{bv=+localStorage.getItem('nuki-bestv-'+stage)||0;if(views>bv)localStorage.setItem('nuki-bestv-'+stage,views)}catch(e){}
+  $('eTotal').textContent=(rare?(rare.fire?'有名まとめに取り上げられた… ':'有名チャンネルからコメントが来て再生数アップ！ '):'')+(views>bv&&bv?'自己最高の再生数！ ':'')+`${STAGES[stage].name}をこれまでに ${total(stage)}個 処置`+(reds.length?` ／ 赤ニキビをガマン ×${reds.length}`:'');
+  for(const o of reds)if(!o.touched)discover('zit-'+o.sub);
+  {let th='';try{const c=document.createElement('canvas');c.width=192;c.height=108;c.getContext('2d').drawImage(cv,0,0,192,108);th=c.toDataURL('image/jpeg',.6)}catch(e){}
+   const v=LS.get('nuki-vids',[]);v.unshift({s:stage,title,views,rk,cl,d:Date.now(),th});LS.set('nuki-vids',v.slice(0,30))}
+  const tl=$('eTempo').textContent;
+  lastShare=`【ヌキヌキ処置室】${STAGES[stage].name}で${rk}ランク！\n「${title}」\n${fmtV(views)}回再生／綺麗さ${cl}点／テンポ:${tl}／${buzz}`+(st.vLong?`\n最長 ${st.vLong.toFixed(1)}mm抜けた`:'')+`\n#ヌキヌキ処置室`;
+  $('shareBox').hidden=true;
+  {const G0=LS.get('nuki-g',{mis:0});if(mOk)G0.mis=(G0.mis||0)+1;LS.set('nuki-g',G0);
+   const vids=LS.get('nuki-vids',[]),G={n:vids.length,tot:vids.reduce((a,q)=>a+q.views,0),mis:G0.mis,vids},C={stage,rk,views,cl,st,wins,fails,recT,greeted,cs,fire,rare,reds,care};
+   const have=LS.get('nuki-ach',{}),got=[];for(const[id,nm,ds,f]of ACH){if(!have[id]){let ok=false;try{ok=!!f(C,G)}catch(e){}if(ok){have[id]=Date.now();got.push(nm)}}}LS.set('nuki-ach',have);
+   if(got.length)newZk.push('実績解除：'+got.join('、'))}
+  $('eMis').hidden=!mission;if(mission){$('eMis').className='mis '+(mOk?'ok':'ng');$('eMis').textContent=(mOk?'お題クリア！再生数×1.3　':'お題失敗…　')+'「'+mission.t+'」'}
+  $('eNew').hidden=!newZk.length;$('eNew').textContent=newZk.join(' ／ ');
+  $('ovEnd').hidden=false;$('ovCh').hidden=true;$('ovZk').hidden=true;$('ovAch').hidden=true;tone(523,784,.2,'triangle',.2);
+}
+}
+</script>
+</body>
+</html>
